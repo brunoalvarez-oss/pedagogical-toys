@@ -12,11 +12,11 @@ criticidade para saber o que se quer e conseguir tirar a ideia do papel.
 | Recurso | Área | Segmento | Assunto |
 |---|---|---|---|
 | Álbum da Copa: quando fica difícil não repetir? | Matemática | Ensino Médio | Funções e probabilidade |
-| Fábrica de Poemas | Linguagens | Anos Iniciais | Poesia, rima e sonoridade |
-| Equilíbrio na cadeia alimentar | Ciências da Natureza | Anos Finais | Ecossistemas e interdependência |
-| Máquina demográfica | Ciências Humanas | Anos Finais | Demografia e transição demográfica |
 
 Cada recurso traz **habilidades trabalhadas (BNCC)** e **séries indicadas**.
+A biblioteca começa com um recurso e cresce por contribuição dos colegas — a
+próxima leva prevê um recurso para cada área (Linguagens, Ciências da Natureza
+e Ciências Humanas).
 
 ## Como rodar
 
@@ -44,10 +44,7 @@ assets/
   vendor/                Chart.js embutido (funciona offline)
 recursos/
   _template/             Modelo comentado para criar um recurso novo
-  matematica-figurinhas/
-  linguagens-fabrica-poemas/
-  ciencias-natureza-cadeia-alimentar/
-  ciencias-humanas-piramide-etaria/
+  matematica-figurinhas/ Recurso de Matemática (funções e probabilidade)
 ```
 
 ## Como adicionar um recurso (compartilhamento entre pares)
