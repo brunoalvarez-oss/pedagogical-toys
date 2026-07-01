@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca de Recursos Pedagógicos</title>
+  <meta name="description" content="Ferramentas interativas criadas por professores, para professores. Filtre por série, área, assunto e habilidade.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <p class="kicker">Feito por professores, para professores</p>
+      <h1>Biblioteca de Recursos Pedagógicos</h1>
+      <p>Ferramentas interativas que nascem da autoria docente. Em vez de usar apenas aplicativos prontos, aqui cada professor constrói — com apoio de IA — a ferramenta que a sua aula pede, e compartilha com os colegas.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="filters" aria-label="Filtros">
+      <input type="search" class="search" id="search" placeholder="Buscar por título, assunto, tag…" autocomplete="off">
+
+      <div class="filter-group">
+        <span class="label">Área</span>
+        <div class="chips" id="filter-area"></div>
+      </div>
+      <div class="filter-group">
+        <span class="label">Segmento</span>
+        <div class="chips" id="filter-segmento"></div>
+      </div>
+      <div class="filter-group">
+        <span class="label">Série</span>
+        <div class="chips" id="filter-serie"></div>
+      </div>
+      <div class="filter-group">
+        <span class="label">Habilidade (BNCC)</span>
+        <div class="chips" id="filter-habilidade"></div>
+      </div>
+
+      <div class="filters-footer">
+        <span class="count" id="count"></span>
+        <button class="clear" id="clear">Limpar filtros</button>
+      </div>
+    </section>
+
+    <section class="grid" id="grid" aria-live="polite"></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      Biblioteca aberta e editável. Quer adicionar um recurso? Veja <code>recursos/_template/</code> e o <code>README.md</code>.
+    </div>
+  </footer>
+
+  <script src="assets/resources.js"></script>
+  <script src="assets/filters.js"></script>
+</body>
+</html>

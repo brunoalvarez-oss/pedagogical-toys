@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Álbum da Copa: quando fica difícil não repetir? · Matemática</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <script src="../../assets/vendor/chart.umd.min.js"></script>
+</head>
+<body class="theme-matematica">
+  <div class="wrap resource">
+    <a class="backlink" href="../../index.html">← Voltar à biblioteca</a>
+
+    <header class="resource-head">
+      <div class="top">
+        <span class="badge area-matematica">Matemática</span>
+        <span class="badge seg">Ensino Médio</span>
+      </div>
+      <h1>Álbum da Copa: quando fica difícil não repetir?</h1>
+      <p class="lead">Todo mundo que já colecionou figurinhas sente que, depois de certo ponto, quase todo pacote vem cheio de repetidas. Este simulador transforma esse incômodo em <strong>função</strong> e <strong>probabilidade</strong>: veja a chance de repetir crescer conforme seu álbum enche.</p>
+    </header>
+
+    <!-- ================= SIMULADOR ================= -->
+    <section class="panel">
+      <h2>Simulador</h2>
+
+      <div style="margin-bottom:22px">
+        <div class="seg-toggle" role="group" aria-label="Modo do modelo">
+          <button id="mode-simples" aria-pressed="true">Modo simples</button>
+          <button id="mode-avancado" aria-pressed="false">Modo avançado</button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="control">
+          <label for="N">Tamanho do álbum (N figurinhas) <span class="val" id="N-val">640</span></label>
+          <input type="range" id="N" min="50" max="800" step="10" value="640">
+        </div>
+        <div class="control" id="ctrl-c">
+          <label for="c">Figurinhas por pacote (c) <span class="val" id="c-val">5</span></label>
+          <input type="range" id="c" min="1" max="12" step="1" value="5">
+        </div>
+        <div class="control">
+          <label for="k">Quantas você já tem (k) <span class="val" id="k-val">320</span></label>
+          <input type="range" id="k" min="0" max="640" step="1" value="320">
+        </div>
+      </div>
+
+      <div class="chart-box"><canvas id="chart"></canvas></div>
+
+      <div class="readouts" id="readouts"></div>
+
+      <p class="muted" id="collector-note" style="margin-top:18px"></p>
+    </section>
+
+    <!-- ================= COMO O MODELO FUNCIONA ================= -->
+    <section class="panel">
+      <h2>Como o modelo funciona</h2>
+      <p>Suponha um álbum de <strong>N</strong> figurinhas diferentes e que você já colou <strong>k</strong> delas. Se cada figurinha nova tem a mesma chance de sair (distribuição uniforme), então:</p>
+
+      <h3>Modo simples — uma reta</h3>
+      <p>A probabilidade de <em>uma</em> figurinha sorteada ser repetida é simplesmente a fração do álbum que você já tem:</p>
+      <p style="font-size:1.2rem"><strong>p(k) = k / N</strong></p>
+      <p class="muted">É uma <strong>função afim</strong> (do 1º grau): começa em 0 (álbum vazio, nada repete) e chega a 1 (álbum cheio, tudo repete). O gráfico é uma reta — ótimo ponto de partida para falar de funções.</p>
+
+      <h3>Modo avançado — o pacote inteiro</h3>
+      <p>Um pacote traz <strong>c</strong> figurinhas diferentes entre si. Aí surgem perguntas mais ricas:</p>
+      <ul>
+        <li><strong>Valor esperado</strong> de repetidas no pacote: <strong>E = c · (k/N)</strong>.</li>
+        <li>Probabilidade de o <strong>pacote inteiro</strong> vir repetido (todas que você já tem): <strong>C(k, c) / C(N, c)</strong> — uma curva que fica quase colada no zero e dispara só no fim.</li>
+      </ul>
+      <p class="muted">Repare como saímos da reta e entramos numa curva não-linear. É o momento de discutir por que a experiência "todo pacote é repetido" só aparece quando o álbum já está bem cheio.</p>
+
+      <div class="note">
+        <strong>Nosso modelo é fiel à realidade?</strong> Não totalmente — e essa é a melhor pergunta da aula. Ele assume que todas as figurinhas são igualmente prováveis, mas álbuns reais têm figurinhas raras e regras de distribuição por pacote. Peça à turma para listar o que o modelo ignora: é assim que se forma o olhar crítico sobre modelagem matemática.
+      </div>
+    </section>
+
+    <!-- ================= METADADOS ================= -->
+    <section class="panel">
+      <h2>Habilidades e séries</h2>
+      <div class="meta-grid">
+        <div>
+          <h3 style="margin-top:0">Habilidades trabalhadas (BNCC)</h3>
+          <div class="skill"><code>EM13MAT406</code><span class="desc">Analisar e comparar funções, reconhecendo a função polinomial do 1º grau (afim) em situações reais.</span></div>
+          <div class="skill"><code>EM13MAT311</code><span class="desc">Identificar o espaço amostral de eventos aleatórios e calcular probabilidades.</span></div>
+          <div class="skill"><code>EM13MAT101</code><span class="desc">Interpretar situações-problema com grandezas que variam, mobilizando raciocínio proporcional.</span></div>
+          <p class="muted" style="margin-top:14px">Confira os códigos no currículo da sua rede — a redação pode variar.</p>
+        </div>
+        <div>
+          <h3 style="margin-top:0">Séries indicadas</h3>
+          <div class="pill-list">
+            <span class="pill">1ª série EM</span>
+            <span class="pill">2ª série EM</span>
+          </div>
+          <h3>Assunto</h3>
+          <div class="pill-list">
+            <span class="pill">Função afim</span>
+            <span class="pill">Probabilidade</span>
+            <span class="pill">Valor esperado</span>
+            <span class="pill">Modelagem</span>
+          </div>
+          <h3>Extensão sugerida</h3>
+          <p class="muted">O "problema do colecionador": quantos pacotes, em média, para completar o álbum? A estimativa aparece abaixo do gráfico e conecta probabilidade a custo real.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-footer"><div class="wrap">Biblioteca de Recursos Pedagógicos · recurso de Matemática</div></footer>
+
+  <script>
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+    var mode = "simples";
+
+    var els = { N: $("N"), c: $("c"), k: $("k") };
+    var vals = { N: $("N-val"), c: $("c-val"), k: $("k-val") };
+
+    // Combinação relativa C(k,c)/C(N,c) sem estourar: produto de (k-i)/(N-i).
+    function packAllRepeated(k, N, c) {
+      if (k < c) return 0;
+      var p = 1;
+      for (var i = 0; i < c; i++) p *= (k - i) / (N - i);
+      return p;
+    }
+
+    // Estimativa do colecionador: pacotes ~ N*H_N / c  (H_N = série harmônica)
+    function packsToComplete(N, c) {
+      var H = 0;
+      for (var i = 1; i <= N; i++) H += 1 / i;
+      return (N * H) / c;
+    }
+
+    var chart = new Chart($("chart"), {
+      type: "line",
+      data: { labels: [], datasets: [] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        scales: {
+          x: { title: { display: true, text: "Figurinhas que você já tem (k)" }, ticks: { maxTicksLimit: 9 } },
+          y: { title: { display: true, text: "Probabilidade" }, min: 0, max: 1,
+               ticks: { callback: function (v) { return Math.round(v * 100) + "%"; } } }
+        },
+        plugins: {
+          legend: { position: "top", labels: { font: { family: "Rethink Sans" }, usePointStyle: true } },
+          tooltip: { callbacks: { label: function (ctx) { return ctx.dataset.label + ": " + (ctx.parsed.y * 100).toFixed(1) + "%"; } } }
+        }
+      }
+    });
+
+    function build() {
+      var N = +els.N.value, c = +els.c.value;
+      // k não pode passar de N
+      els.k.max = N;
+      if (+els.k.value > N) els.k.value = N;
+      var k = +els.k.value;
+
+      vals.N.textContent = N; vals.c.textContent = c; vals.k.textContent = k;
+
+      var STEP = Math.max(1, Math.round(N / 80));
+      var labels = [], single = [], allRep = [];
+      for (var x = 0; x <= N; x += STEP) {
+        labels.push(x);
+        single.push(x / N);
+        allRep.push(packAllRepeated(x, N, c));
+      }
+
+      var ds = [{
+        label: "P(1 figurinha repetida) = k/N",
+        data: single, borderColor: "#4C8BF5", backgroundColor: "#4C8BF5",
+        borderWidth: 3, pointRadius: 0, tension: 0
+      }];
+
+      if (mode === "avancado") {
+        ds.push({
+          label: "P(pacote inteiro repetido)",
+          data: allRep, borderColor: "#E0A43B", backgroundColor: "#E0A43B",
+          borderWidth: 3, pointRadius: 0, tension: 0.15, borderDash: [6, 4]
+        });
+      }
+      chart.data.labels = labels;
+      chart.data.datasets = ds;
+      chart.update();
+
+      renderReadouts(N, c, k);
+    }
+
+    function pct(x) { return (x * 100).toFixed(1) + "%"; }
+
+    function renderReadouts(N, c, k) {
+      var pSingle = k / N;
+      var box = $("readouts");
+      var html =
+        readout("Você já tem", k + " / " + N) +
+        readout("P(1 repetida)", pct(pSingle));
+
+      if (mode === "avancado") {
+        var expected = c * pSingle;
+        var pAll = packAllRepeated(k, N, c);
+        html +=
+          readout("Repetidas por pacote (média)", expected.toFixed(2) + " de " + c) +
+          readout("P(pacote todo repetido)", pct(pAll)) +
+          readout("P(pelo menos 1 nova)", pct(1 - pAll));
+      }
+      box.innerHTML = html;
+
+      // Nota do colecionador
+      var packs = packsToComplete(N, c);
+      $("collector-note").innerHTML =
+        "<strong>Problema do colecionador:</strong> para completar um álbum de " + N +
+        " figurinhas comprando pacotes de " + c + ", seriam necessários, em média, cerca de <strong>" +
+        Math.round(packs) + " pacotes</strong> — é por isso que as últimas figurinhas parecem impossíveis!";
+    }
+
+    function readout(k, v) {
+      return '<div class="readout"><div class="k">' + k + '</div><div class="v">' + v + "</div></div>";
+    }
+
+    // Alternância de modo
+    function setMode(m) {
+      mode = m;
+      $("mode-simples").setAttribute("aria-pressed", String(m === "simples"));
+      $("mode-avancado").setAttribute("aria-pressed", String(m === "avancado"));
+      $("ctrl-c").style.display = (m === "avancado") ? "" : "none";
+      build();
+    }
+    $("mode-simples").addEventListener("click", function () { setMode("simples"); });
+    $("mode-avancado").addEventListener("click", function () { setMode("avancado"); });
+
+    ["N", "c", "k"].forEach(function (id) { els[id].addEventListener("input", build); });
+
+    setMode("simples");
+  })();
+  </script>
+</body>
+</html>

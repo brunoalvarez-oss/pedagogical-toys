@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equilíbrio na cadeia alimentar · Ciências da Natureza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <script src="../../assets/vendor/chart.umd.min.js"></script>
+</head>
+<body class="theme-ciencias-natureza">
+  <div class="wrap resource">
+    <a class="backlink" href="../../index.html">← Voltar à biblioteca</a>
+
+    <header class="resource-head">
+      <div class="top">
+        <span class="badge area-ciencias-natureza">Ciências da Natureza</span>
+        <span class="badge seg">Anos Finais</span>
+      </div>
+      <h1>Equilíbrio na cadeia alimentar</h1>
+      <p class="lead">O que acontece com as presas quando há predadores demais? E com os predadores quando falta comida? Ajuste os controles e veja duas populações — coelhos e raposas — dançarem juntas ao longo do tempo.</p>
+    </header>
+
+    <section class="panel">
+      <h2>Simulador predador–presa</h2>
+      <div class="controls">
+        <div class="control">
+          <label for="a">Reprodução das presas 🐇 <span class="val" id="a-val"></span></label>
+          <input type="range" id="a" min="0.2" max="1.5" step="0.05" value="0.8">
+        </div>
+        <div class="control">
+          <label for="b">Taxa de predação 🦊→🐇 <span class="val" id="b-val"></span></label>
+          <input type="range" id="b" min="0.005" max="0.06" step="0.005" value="0.025">
+        </div>
+        <div class="control">
+          <label for="d">Mortalidade dos predadores 🦊 <span class="val" id="d-val"></span></label>
+          <input type="range" id="d" min="0.2" max="1.5" step="0.05" value="0.7">
+        </div>
+        <div class="control">
+          <label for="e">Eficiência do predador <span class="val" id="e-val"></span></label>
+          <input type="range" id="e" min="0.005" max="0.05" step="0.005" value="0.02">
+        </div>
+        <div class="control">
+          <label for="prey0">Presas iniciais 🐇 <span class="val" id="prey0-val"></span></label>
+          <input type="range" id="prey0" min="10" max="120" step="5" value="60">
+        </div>
+        <div class="control">
+          <label for="pred0">Predadores iniciais 🦊 <span class="val" id="pred0-val"></span></label>
+          <input type="range" id="pred0" min="5" max="60" step="5" value="25">
+        </div>
+      </div>
+
+      <div class="chart-box"><canvas id="chart"></canvas></div>
+      <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn primary" id="run">↻ Rodar novamente</button>
+        <button class="btn" id="preset-eq">Exemplo: equilíbrio</button>
+        <button class="btn" id="preset-crash">Exemplo: colapso</button>
+      </div>
+      <p class="muted" id="verdict" style="margin-top:16px"></p>
+    </section>
+
+    <section class="panel">
+      <h2>O que está acontecendo?</h2>
+      <p>O simulador usa uma versão simplificada do modelo <strong>predador–presa</strong> (Lotka–Volterra). A cada passo de tempo:</p>
+      <ul>
+        <li>As <strong>presas</strong> se multiplicam sozinhas, mas diminuem quando encontram predadores.</li>
+        <li>Os <strong>predadores</strong> só sobrevivem se comem — sem presas, sua população cai.</li>
+      </ul>
+      <p>O resultado costuma ser um <strong>ciclo</strong>: muitas presas → predadores engordam e se reproduzem → presas somem → predadores passam fome → presas voltam. As curvas sobem e descem em ondas defasadas.</p>
+      <div class="note" style="border-left-color: var(--ciencias-natureza)">
+        <strong>Discussão:</strong> por que o pico das raposas vem sempre <em>depois</em> do pico dos coelhos? O que acontece se a predação for altíssima logo no começo? Um modelo tão simples é suficiente para descrever a natureza real, cheia de doenças, clima e outras espécies?
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Habilidades e séries</h2>
+      <div class="meta-grid">
+        <div>
+          <h3 style="margin-top:0">Habilidades trabalhadas (BNCC)</h3>
+          <div class="skill"><code>EF07CI08</code><span class="desc">Avaliar como os impactos nas populações afetam o equilíbrio dos ecossistemas.</span></div>
+          <div class="skill"><code>EF06CI07</code><span class="desc">Justificar o papel das relações entre os seres vivos na manutenção da vida.</span></div>
+          <p class="muted" style="margin-top:14px">Confira os códigos no currículo da sua rede — a redação pode variar.</p>
+        </div>
+        <div>
+          <h3 style="margin-top:0">Séries indicadas</h3>
+          <div class="pill-list"><span class="pill">7º ano</span></div>
+          <h3>Assunto</h3>
+          <div class="pill-list">
+            <span class="pill">Cadeia alimentar</span><span class="pill">Equilíbrio ecológico</span>
+            <span class="pill">Interdependência</span><span class="pill">Leitura de gráfico</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-footer"><div class="wrap">Biblioteca de Recursos Pedagógicos · recurso de Ciências da Natureza</div></footer>
+
+  <script>
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+    var ids = ["a", "b", "d", "e", "prey0", "pred0"];
+
+    var chart = new Chart($("chart"), {
+      type: "line",
+      data: { labels: [], datasets: [] },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        interaction: { mode: "index", intersect: false },
+        scales: {
+          x: { title: { display: true, text: "Tempo" }, ticks: { maxTicksLimit: 10 } },
+          y: { title: { display: true, text: "População" }, min: 0 }
+        },
+        plugins: { legend: { position: "top", labels: { font: { family: "Rethink Sans" }, usePointStyle: true } } }
+      }
+    });
+
+    function simulate() {
+      var a = +$("a").value, b = +$("b").value, d = +$("d").value, e = +$("e").value;
+      var prey = +$("prey0").value, pred = +$("pred0").value;
+
+      ids.forEach(function (id) { $(id + "-val").textContent = $(id).value; });
+
+      var dt = 0.02, steps = 4000, sample = 20;
+      var labels = [], preyArr = [], predArr = [];
+      var extinct = null;
+
+      for (var i = 0; i <= steps; i++) {
+        if (i % sample === 0) {
+          labels.push((i * dt).toFixed(1));
+          preyArr.push(+prey.toFixed(1));
+          predArr.push(+pred.toFixed(1));
+        }
+        var dPrey = a * prey - b * prey * pred;
+        var dPred = e * prey * pred - d * pred;
+        prey = Math.max(0, prey + dPrey * dt);
+        pred = Math.max(0, pred + dPred * dt);
+        if (!extinct && (prey < 0.5 || pred < 0.5)) extinct = prey < 0.5 ? "presas" : "predadores";
+      }
+
+      chart.data.labels = labels;
+      chart.data.datasets = [
+        { label: "Presas 🐇", data: preyArr, borderColor: "#37A877", backgroundColor: "#37A87722",
+          borderWidth: 3, pointRadius: 0, tension: 0.3, fill: true },
+        { label: "Predadores 🦊", data: predArr, borderColor: "#E06A3B", backgroundColor: "transparent",
+          borderWidth: 3, pointRadius: 0, tension: 0.3 }
+      ];
+      chart.update();
+
+      $("verdict").innerHTML = extinct
+        ? "⚠️ Neste cenário, as <strong>" + extinct + "</strong> foram extintas — o equilíbrio se rompeu. Tente ajustar as taxas."
+        : "✅ As duas populações coexistem em ciclos. Repare nas ondas defasadas: o pico dos predadores vem sempre depois do pico das presas.";
+    }
+
+    function setValues(v) { Object.keys(v).forEach(function (k) { $(k).value = v[k]; }); simulate(); }
+
+    ids.forEach(function (id) { $(id).addEventListener("input", simulate); });
+    $("run").addEventListener("click", simulate);
+    $("preset-eq").addEventListener("click", function () {
+      setValues({ a: 0.8, b: 0.025, d: 0.7, e: 0.02, prey0: 60, pred0: 25 });
+    });
+    $("preset-crash").addEventListener("click", function () {
+      setValues({ a: 0.4, b: 0.06, d: 1.5, e: 0.05, prey0: 30, pred0: 55 });
+    });
+
+    simulate();
+  })();
+  </script>
+</body>
+</html>

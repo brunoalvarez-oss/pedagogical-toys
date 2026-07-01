@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!-- =========================================================================
+     MODELO DE RECURSO — copie esta pasta para criar o seu.
+
+     PASSO A PASSO (dá para pedir ajuda a uma IA em cada etapa):
+       1. Duplique a pasta recursos/_template/ e renomeie para algo como
+          recursos/minha-area-meu-tema/
+       2. Edite este arquivo: título, textos, o simulador e os metadados.
+       3. Abra assets/resources.js e adicione um objeto novo descrevendo o
+          seu recurso (área, segmento, séries, habilidades, tags…).
+       4. Pronto: ele aparece na página inicial e nos filtros automaticamente.
+
+     Troque "AREA-SLUG" abaixo por uma destas classes de tema/cor:
+       theme-matematica · theme-linguagens ·
+       theme-ciencias-natureza · theme-ciencias-humanas
+     E os badges "area-..." pela sua área.
+     ========================================================================= -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Título do recurso · Área</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <!-- Precisa de gráficos? Descomente a linha abaixo (Chart.js, embutido localmente).
+  <script src="../../assets/vendor/chart.umd.min.js"></script>
+  -->
+</head>
+<body class="theme-matematica"><!-- troque pelo tema da sua área -->
+  <div class="wrap resource">
+    <a class="backlink" href="../../index.html">← Voltar à biblioteca</a>
+
+    <header class="resource-head">
+      <div class="top">
+        <span class="badge area-matematica">Área</span><!-- troque a classe e o texto -->
+        <span class="badge seg">Segmento</span>
+      </div>
+      <h1>Título do recurso</h1>
+      <p class="lead">Uma frase que faça o professor querer usar isto amanhã: qual dúvida ou curiosidade este recurso desperta?</p>
+    </header>
+
+    <!-- ================= SIMULADOR / FERRAMENTA ================= -->
+    <section class="panel">
+      <h2>Ferramenta interativa</h2>
+
+      <!-- Controles: use .controls + .control (veja os outros recursos). -->
+      <div class="controls">
+        <div class="control">
+          <label for="param">Um parâmetro <span class="val" id="param-val">10</span></label>
+          <input type="range" id="param" min="0" max="100" step="1" value="10">
+        </div>
+      </div>
+
+      <!-- Área do resultado: um gráfico (canvas), um texto, o que fizer sentido. -->
+      <div class="chart-box"><canvas id="chart"></canvas></div>
+      <div class="readouts" id="readouts"></div>
+    </section>
+
+    <!-- ================= EXPLICAÇÃO ================= -->
+    <section class="panel">
+      <h2>Como funciona</h2>
+      <p>Explique o modelo em linguagem simples. Sempre que possível, inclua uma
+         nota crítica: o que este modelo simplifica ou ignora? Convidar o aluno a
+         enxergar os limites da ferramenta é parte do aprendizado.</p>
+      <div class="note">
+        <strong>Para debater:</strong> escreva aqui 2 ou 3 boas perguntas.
+      </div>
+    </section>
+
+    <!-- ================= METADADOS (obrigatório: habilidades e séries) ============ -->
+    <section class="panel">
+      <h2>Habilidades e séries</h2>
+      <div class="meta-grid">
+        <div>
+          <h3 style="margin-top:0">Habilidades trabalhadas (BNCC)</h3>
+          <div class="skill"><code>EFxxYYzz</code><span class="desc">Descrição da habilidade.</span></div>
+        </div>
+        <div>
+          <h3 style="margin-top:0">Séries indicadas</h3>
+          <div class="pill-list"><span class="pill">Série</span></div>
+          <h3>Assunto</h3>
+          <div class="pill-list"><span class="pill">Tema</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-footer"><div class="wrap">Biblioteca de Recursos Pedagógicos</div></footer>
+
+  <script>
+  (function () {
+    // Escreva aqui a lógica da sua ferramenta. Mantenha tudo nesta página,
+    // assim o recurso é autocontido e fácil de copiar/adaptar.
+    var p = document.getElementById("param");
+    var v = document.getElementById("param-val");
+    p.addEventListener("input", function () { v.textContent = p.value; });
+  })();
+  </script>
+</body>
+</html>

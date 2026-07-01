@@ -1,0 +1,202 @@
+/* =========================================================================
+   Biblioteca de Recursos Pedagógicos — design system compartilhado
+   Cores claras, visual convidativo e minimalista. Fonte: Rethink Sans.
+   Um único arquivo serve à página inicial e às páginas de recurso.
+   ========================================================================= */
+
+:root {
+  /* Base */
+  --bg: #FBFAF7;
+  --surface: #FFFFFF;
+  --ink: #23222B;
+  --ink-soft: #6B6A76;
+  --line: #ECEAE3;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 1px 2px rgba(35, 34, 43, .04), 0 8px 24px rgba(35, 34, 43, .06);
+  --shadow-soft: 0 1px 2px rgba(35, 34, 43, .03), 0 4px 14px rgba(35, 34, 43, .04);
+
+  /* Acentos por área do conhecimento (tons claros) */
+  --matematica: #4C8BF5;        --matematica-soft: #EAF1FE;
+  --linguagens: #E8688B;        --linguagens-soft: #FDECF1;
+  --ciencias-natureza: #37A877; --ciencias-natureza-soft: #E7F6EF;
+  --ciencias-humanas: #DB9B2E;  --ciencias-humanas-soft: #FBF2E0;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: "Rethink Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+a { color: inherit; }
+
+/* ---------- Cabeçalho ---------- */
+.site-header { padding: 56px 0 32px; }
+.site-header .kicker {
+  text-transform: uppercase; letter-spacing: .12em; font-size: .78rem;
+  font-weight: 700; color: var(--ink-soft); margin: 0 0 10px;
+}
+.site-header h1 { font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 800; margin: 0 0 12px; letter-spacing: -.02em; }
+.site-header p { max-width: 62ch; font-size: 1.08rem; color: var(--ink-soft); margin: 0; }
+
+/* ---------- Barra de filtros ---------- */
+.filters {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-soft);
+  padding: 22px 24px; margin: 8px 0 28px;
+}
+.filters .search {
+  width: 100%; padding: 13px 16px; font: inherit; color: var(--ink);
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  margin-bottom: 18px;
+}
+.filters .search:focus { outline: 2px solid var(--matematica); outline-offset: 1px; }
+
+.filter-group { margin-bottom: 14px; }
+.filter-group:last-child { margin-bottom: 0; }
+.filter-group > .label {
+  display: block; font-size: .74rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--ink-soft); margin-bottom: 8px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: inherit; font-size: .9rem; cursor: pointer;
+  padding: 7px 14px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft);
+  transition: all .15s ease;
+}
+.chip:hover { border-color: #d9d7cf; color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+.filters-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line);
+}
+.count { font-size: .92rem; color: var(--ink-soft); }
+.clear {
+  font: inherit; font-size: .9rem; background: none; border: none; cursor: pointer;
+  color: var(--matematica); font-weight: 600; padding: 4px 6px;
+}
+.clear:hover { text-decoration: underline; }
+
+/* ---------- Grade de cards ---------- */
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px; padding-bottom: 64px;
+}
+.card {
+  display: flex; flex-direction: column; text-decoration: none;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-soft);
+  padding: 22px; transition: transform .16s ease, box-shadow .16s ease;
+}
+.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.card .top { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.card h3 { font-size: 1.18rem; font-weight: 700; margin: 0 0 8px; letter-spacing: -.01em; }
+.card .resumo { font-size: .96rem; color: var(--ink-soft); margin: 0 0 18px; flex: 1; }
+.card .meta { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Tags de área e segmento */
+.badge {
+  font-size: .76rem; font-weight: 700; letter-spacing: .02em;
+  padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+}
+.badge.seg { background: var(--bg); color: var(--ink-soft); border: 1px solid var(--line); }
+.tag {
+  font-size: .78rem; padding: 3px 9px; border-radius: 7px;
+  background: var(--bg); color: var(--ink-soft); border: 1px solid var(--line);
+}
+
+/* Cores por área */
+.area-matematica        { background: var(--matematica-soft);        color: #24589e; }
+.area-linguagens        { background: var(--linguagens-soft);        color: #b23a5e; }
+.area-ciencias-natureza { background: var(--ciencias-natureza-soft); color: #1f7a52; }
+.area-ciencias-humanas  { background: var(--ciencias-humanas-soft);  color: #9c6a12; }
+
+.empty { grid-column: 1 / -1; text-align: center; color: var(--ink-soft); padding: 48px 0; }
+
+/* =========================================================================
+   Páginas de recurso
+   ========================================================================= */
+.resource { padding-bottom: 72px; }
+.backlink {
+  display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+  color: var(--ink-soft); font-weight: 600; font-size: .92rem; margin: 32px 0 8px;
+}
+.backlink:hover { color: var(--ink); }
+
+.resource-head { padding: 8px 0 28px; border-bottom: 1px solid var(--line); margin-bottom: 32px; }
+.resource-head .top { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.resource-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.5rem); font-weight: 800; margin: 0 0 10px; letter-spacing: -.02em; }
+.resource-head .lead { font-size: 1.1rem; color: var(--ink-soft); max-width: 68ch; margin: 0; }
+
+.panel {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-soft);
+  padding: 26px; margin-bottom: 26px;
+}
+.panel h2 { font-size: 1.25rem; font-weight: 700; margin: 0 0 16px; letter-spacing: -.01em; }
+.panel h3 { font-size: 1.02rem; font-weight: 700; margin: 22px 0 8px; }
+.panel p  { color: var(--ink); margin: 0 0 12px; }
+.panel .muted { color: var(--ink-soft); font-size: .95rem; }
+
+/* Controles dos simuladores */
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 6px; }
+.control label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: 8px; }
+.control label .val { float: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.control input[type="range"] { width: 100%; accent-color: var(--matematica); }
+.control select, .control input[type="number"] {
+  width: 100%; padding: 9px 12px; font: inherit; border: 1px solid var(--line);
+  border-radius: var(--radius-sm); background: var(--bg); color: var(--ink);
+}
+.seg-toggle { display: inline-flex; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 4px; gap: 4px; }
+.seg-toggle button {
+  font: inherit; font-size: .9rem; border: none; background: none; cursor: pointer;
+  padding: 7px 16px; border-radius: 999px; color: var(--ink-soft); font-weight: 600;
+}
+.seg-toggle button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-soft); }
+
+.chart-box { position: relative; height: 380px; margin-top: 22px; }
+
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 22px; }
+.readout { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; }
+.readout .k { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); font-weight: 700; }
+.readout .v { font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+
+.btn {
+  font: inherit; font-weight: 600; cursor: pointer; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); padding: 10px 18px; border-radius: var(--radius-sm);
+}
+.btn:hover { border-color: #d9d7cf; }
+.btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* Metadados: habilidades e séries */
+.meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+@media (max-width: 640px) { .meta-grid { grid-template-columns: 1fr; } }
+.skill { padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.skill:last-child { border-bottom: none; }
+.skill code { font-weight: 800; font-size: .92rem; }
+.skill .desc { display: block; color: var(--ink-soft); font-size: .93rem; margin-top: 2px; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: .92rem; }
+
+.note { background: var(--bg); border-left: 3px solid var(--matematica); border-radius: 6px; padding: 14px 18px; margin: 16px 0; }
+.note strong { font-weight: 700; }
+
+/* Área-tema aplicada por página (muda o acento) */
+.theme-matematica        { --matematica: #4C8BF5; }
+.theme-linguagens        input[type="range"] { accent-color: var(--linguagens); }
+.theme-ciencias-natureza input[type="range"] { accent-color: var(--ciencias-natureza); }
+.theme-ciencias-humanas  input[type="range"] { accent-color: var(--ciencias-humanas); }
+
+.site-footer { border-top: 1px solid var(--line); padding: 28px 0 48px; color: var(--ink-soft); font-size: .9rem; }

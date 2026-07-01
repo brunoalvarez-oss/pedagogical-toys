@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Máquina demográfica · Ciências Humanas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <script src="../../assets/vendor/chart.umd.min.js"></script>
+</head>
+<body class="theme-ciencias-humanas">
+  <div class="wrap resource">
+    <a class="backlink" href="../../index.html">← Voltar à biblioteca</a>
+
+    <header class="resource-head">
+      <div class="top">
+        <span class="badge area-ciencias-humanas">Ciências Humanas</span>
+        <span class="badge seg">Anos Finais</span>
+      </div>
+      <h1>Máquina demográfica</h1>
+      <p class="lead">Por que a pirâmide etária do Brasil de 1980 parece um triângulo e a do Japão de hoje parece um pião de cabeça para baixo? Mexa nos controles e veja o formato da população se transformar diante dos seus olhos.</p>
+    </header>
+
+    <section class="panel">
+      <h2>Monte sua população</h2>
+      <div class="controls">
+        <div class="control">
+          <label for="nat">Natalidade <span class="val" id="nat-val"></span></label>
+          <input type="range" id="nat" min="0" max="2" step="0.1" value="1">
+          <p class="muted" style="font-size:.82rem;margin:6px 0 0">Alta = muitos nascimentos, base larga. Baixa = população envelhecendo.</p>
+        </div>
+        <div class="control">
+          <label for="exp">Expectativa de vida (anos) <span class="val" id="exp-val"></span></label>
+          <input type="range" id="exp" min="45" max="90" step="1" value="75">
+        </div>
+        <div class="control">
+          <label for="mort">Mortalidade geral <span class="val" id="mort-val"></span></label>
+          <input type="range" id="mort" min="0.5" max="2" step="0.1" value="1">
+        </div>
+      </div>
+
+      <div class="chart-box" style="height:460px"><canvas id="chart"></canvas></div>
+
+      <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn" data-preset="br1980">Brasil 1980</button>
+        <button class="btn" data-preset="br2020">Brasil 2020</button>
+        <button class="btn" data-preset="jp2020">Japão 2020</button>
+      </div>
+      <p class="muted" id="verdict" style="margin-top:16px"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Lendo a pirâmide</h2>
+      <ul>
+        <li><strong>Base larga</strong> (muitos jovens): país com natalidade alta — pirâmide "jovem", típica de economias em desenvolvimento no passado.</li>
+        <li><strong>Corpo alargado e base estreita</strong>: a natalidade caiu e a população está <strong>envelhecendo</strong> — a <em>transição demográfica</em> em curso.</li>
+        <li><strong>Topo largo</strong> (muitos idosos): expectativa de vida alta e poucos nascimentos — desafios de previdência e cuidado.</li>
+      </ul>
+      <div class="note" style="border-left-color: var(--ciencias-humanas)">
+        <strong>Para debater:</strong> o que muda numa escola, num hospital ou na aposentadoria quando a pirâmide vira um "pião"? Este é um modelo simplificado — ignora migrações, guerras e epidemias. Peça à turma para apontar quais fatos reais ele não consegue explicar.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Habilidades e séries</h2>
+      <div class="meta-grid">
+        <div>
+          <h3 style="margin-top:0">Habilidades trabalhadas (BNCC)</h3>
+          <div class="skill"><code>EF08GE01</code><span class="desc">Descrever e analisar a dinâmica populacional, distribuição e movimentos migratórios.</span></div>
+          <div class="skill"><code>EF08GE03</code><span class="desc">Analisar aspectos representativos da dinâmica demográfica, considerando estrutura etária.</span></div>
+          <p class="muted" style="margin-top:14px">Confira os códigos no currículo da sua rede — a redação pode variar.</p>
+        </div>
+        <div>
+          <h3 style="margin-top:0">Séries indicadas</h3>
+          <div class="pill-list"><span class="pill">8º ano</span></div>
+          <h3>Assunto</h3>
+          <div class="pill-list">
+            <span class="pill">Demografia</span><span class="pill">Transição demográfica</span>
+            <span class="pill">Pirâmide etária</span><span class="pill">Leitura de gráfico</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-footer"><div class="wrap">Biblioteca de Recursos Pedagógicos · recurso de Ciências Humanas</div></footer>
+
+  <script>
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+
+    // Faixas etárias de 5 em 5 anos: 0-4 ... 80-84, 85+
+    var GROUPS = [];
+    for (var g = 0; g < 85; g += 5) GROUPS.push({ label: g + "–" + (g + 4), age: g + 2 });
+    GROUPS.push({ label: "85+", age: 88 });
+
+    function survival(age, E, mortMult) {
+      // Fica perto de 1 na juventude e cai perto da expectativa de vida (curva tipo Weibull).
+      return Math.exp(-mortMult * Math.pow(age / E, 3));
+    }
+
+    function build() {
+      var nat = +$("nat").value, E = +$("exp").value, mort = +$("mort").value;
+      $("nat-val").textContent = nat.toFixed(1);
+      $("exp-val").textContent = E;
+      $("mort-val").textContent = mort.toFixed(1);
+
+      // Tendência de nascimentos: natalidade alta => mais nascimentos recentes => base larga.
+      var growth = (nat - 1) * 0.9;
+
+      var homens = [], mulheres = [], maxV = 0;
+      GROUPS.forEach(function (grp) {
+        var births = Math.exp(-growth * grp.age / 10);
+        var m = births * survival(grp.age, E, mort);
+        var f = births * survival(grp.age, E * 1.06, mort); // leve vantagem de longevidade feminina
+        homens.push(m); mulheres.push(f);
+        maxV = Math.max(maxV, m, f);
+      });
+
+      // Normaliza para o maior grupo = 100 (percentual relativo)
+      var scale = 100 / (maxV || 1);
+      var homensN = homens.map(function (v) { return -v * scale; }); // negativo = lado esquerdo
+      var mulheresN = mulheres.map(function (v) { return v * scale; });
+
+      chart.data.labels = GROUPS.map(function (g) { return g.label; });
+      chart.data.datasets[0].data = homensN;
+      chart.data.datasets[1].data = mulheresN;
+      chart.update();
+
+      // Índice de envelhecimento: idosos (60+) / jovens (0-14)
+      var jovens = 0, idosos = 0;
+      GROUPS.forEach(function (grp, i) {
+        var tot = homens[i] + mulheres[i];
+        if (grp.age < 15) jovens += tot;
+        if (grp.age >= 60) idosos += tot;
+      });
+      var razao = jovens ? idosos / jovens : 0;
+      var msg;
+      if (razao < 0.3) msg = "🔺 Pirâmide <strong>jovem</strong>: base larga, muitos nascimentos. Poucos idosos para cada criança.";
+      else if (razao < 0.9) msg = "⏳ Pirâmide em <strong>transição</strong>: a base começa a estreitar e o corpo se alarga.";
+      else msg = "🟪 População <strong>envelhecida</strong>: há mais idosos do que jovens — grandes desafios de cuidado e previdência.";
+      $("verdict").innerHTML = msg;
+    }
+
+    var chart = new Chart($("chart"), {
+      type: "bar",
+      data: {
+        labels: [],
+        datasets: [
+          { label: "Homens", data: [], backgroundColor: "#4C8BF5" },
+          { label: "Mulheres", data: [], backgroundColor: "#E8688B" }
+        ]
+      },
+      options: {
+        indexAxis: "y", responsive: true, maintainAspectRatio: false, animation: { duration: 250 },
+        scales: {
+          x: { stacked: true, title: { display: true, text: "% relativo da população" },
+               ticks: { callback: function (v) { return Math.abs(v); } } },
+          y: { stacked: true, reverse: true, title: { display: true, text: "Faixa etária" } }
+        },
+        plugins: {
+          legend: { position: "top", labels: { font: { family: "Rethink Sans" }, usePointStyle: true } },
+          tooltip: { callbacks: { label: function (ctx) {
+            return ctx.dataset.label + ": " + Math.abs(ctx.parsed.x).toFixed(1); } } }
+        }
+      }
+    });
+
+    var PRESETS = {
+      br1980: { nat: 1.7, exp: 62, mort: 1.3 },
+      br2020: { nat: 0.9, exp: 76, mort: 0.9 },
+      jp2020: { nat: 0.4, exp: 84, mort: 0.8 }
+    };
+    document.querySelectorAll("[data-preset]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var p = PRESETS[b.getAttribute("data-preset")];
+        $("nat").value = p.nat; $("exp").value = p.exp; $("mort").value = p.mort;
+        build();
+      });
+    });
+
+    ["nat", "exp", "mort"].forEach(function (id) { $(id).addEventListener("input", build); });
+    build();
+  })();
+  </script>
+</body>
+</html>
