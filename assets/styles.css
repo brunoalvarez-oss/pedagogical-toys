@@ -104,19 +104,27 @@ a { color: inherit; }
 .card .top { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
 .card h3 { font-size: 1.18rem; font-weight: 700; margin: 0 0 8px; letter-spacing: -.01em; }
 .card .resumo { font-size: .96rem; color: var(--ink-soft); margin: 0 0 18px; flex: 1; }
-.card .meta { display: flex; flex-wrap: wrap; gap: 6px; }
 
-/* Tags de área e segmento */
+/* Badges de topo: Área (colorida) e Segmento (contornada) */
 .badge {
   font-size: .76rem; font-weight: 700; letter-spacing: .02em;
   padding: 4px 10px; border-radius: 999px; white-space: nowrap;
 }
 .badge.seg { background: var(--bg); color: var(--ink-soft); border: 1px solid var(--line); }
-.tag {
-  font-size: .78rem; padding: 3px 9px; border-radius: 7px;
-  background: var(--bg); color: var(--ink-soft); border: 1px solid var(--line);
+
+/* Facetas rotuladas do card: cada dimensão (Assunto, Habilidades) tem um
+   micro-rótulo, para deixar clara a distinção entre elas. */
+.card-facets { display: flex; flex-direction: column; gap: 14px; }
+.facet { display: flex; flex-direction: column; gap: 7px; }
+.facet-label {
+  font-size: .66rem; text-transform: uppercase; letter-spacing: .08em;
+  font-weight: 800; color: var(--ink-soft); opacity: .7;
 }
-.card .habs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.facet-vals { display: flex; flex-wrap: wrap; gap: 6px; }
+.assunto-chip {
+  font-size: .82rem; font-weight: 600; padding: 4px 11px; border-radius: 8px;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line);
+}
 .hab {
   font-size: .72rem; font-weight: 700; letter-spacing: .03em;
   padding: 3px 8px; border-radius: 6px; border: 1px dashed var(--line);
@@ -180,9 +188,14 @@ a { color: inherit; }
 .chart-box { position: relative; height: 380px; margin-top: 22px; }
 
 .readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 22px; }
-.readout { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 16px; }
+/* Coluna flex + número pino na base: rótulos com 1 ou 2 linhas não desalinham
+   mais os big numbers entre caixas (a grade iguala a altura de cada linha). */
+.readout {
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 16px; display: flex; flex-direction: column; gap: 10px; text-align: center;
+}
 .readout .k { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); font-weight: 700; }
-.readout .v { font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.readout .v { font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin-top: auto; }
 
 .btn {
   font: inherit; font-weight: 600; cursor: pointer; border: 1px solid var(--line);

@@ -82,7 +82,6 @@
 
   // ---- Card --------------------------------------------------------------
   function cardHTML(r) {
-    var tags = r.tags.slice(0, 3).map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("");
     var habs = r.habilidades.map(function (h) { return '<span class="hab">' + esc(h) + "</span>"; }).join("");
     return (
       '<a class="card" href="' + esc(r.path) + '">' +
@@ -92,8 +91,16 @@
         "</div>" +
         "<h3>" + esc(r.titulo) + "</h3>" +
         '<p class="resumo">' + esc(r.resumo) + "</p>" +
-        '<div class="meta">' + tags + "</div>" +
-        '<div class="habs" title="Habilidades BNCC">' + habs + "</div>" +
+        '<div class="card-facets">' +
+          '<div class="facet">' +
+            '<span class="facet-label">Assunto</span>' +
+            '<div class="facet-vals"><span class="assunto-chip">' + esc(r.assunto) + "</span></div>" +
+          "</div>" +
+          '<div class="facet">' +
+            '<span class="facet-label">Habilidades BNCC</span>' +
+            '<div class="facet-vals">' + habs + "</div>" +
+          "</div>" +
+        "</div>" +
       "</a>"
     );
   }
