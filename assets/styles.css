@@ -245,6 +245,7 @@ a { color: inherit; }
 .tipo-energia   { background: #2563EB; }
 .tipo-sociedade { background: #D97706; }
 .tipo-clima     { background: #16A34A; }
+.tipo-acordos   { background: #4338CA; }
 
 .event-card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 18px 20px; margin-top: 22px; }
 .event-card .head { display: flex; align-items: center; gap: 10px; }
@@ -262,5 +263,41 @@ a { color: inherit; }
 .event-btn:hover { border-color: #d9d7cf; color: var(--ink); }
 .event-btn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
 .event-btn .dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+
+/* Slider de ano com largura ajustada por JS (alignSlider) para casar
+   exatamente com a área de plotagem do gráfico logo abaixo. O thumb tem
+   20px fixos para que a compensação de alinhamento seja previsível. */
+.year-slider-wrap { margin: 2px 0 0; }
+.year-range {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 8px;
+  border-radius: 999px; background: var(--line); outline: none; margin: 0; cursor: pointer;
+}
+.year-range::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--ciencias-humanas); border: 3px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.25); cursor: pointer;
+}
+.year-range::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--ciencias-humanas); border: 3px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.25); cursor: pointer;
+}
+.year-range::-moz-range-track { height: 8px; border-radius: 999px; background: var(--line); }
+
+/* Balãozinho que aparece ao passar o mouse sobre uma bolinha de evento */
+.chart-tip {
+  position: absolute; z-index: 5; pointer-events: none; transform: translate(-50%, -100%);
+  background: var(--ink); color: #fff; font-size: .8rem; font-weight: 600; max-width: 240px;
+  padding: 6px 10px; border-radius: 8px; box-shadow: var(--shadow); opacity: 0; transition: opacity .1s ease;
+}
+.chart-tip::after {
+  content: ""; position: absolute; left: 50%; top: 100%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: var(--ink);
+}
+.chart-tip .yr { opacity: .65; margin-right: 5px; }
+
+/* Glossário de termos e unidades */
+.glossario { list-style: none; padding: 0; margin: 0; }
+.glossario li { padding: 13px 0; border-bottom: 1px dashed var(--line); }
+.glossario li:last-child { border-bottom: none; }
+.glossario .term { font-weight: 800; }
 
 .site-footer { border-top: 1px solid var(--line); padding: 28px 0 48px; color: var(--ink-soft); font-size: .9rem; }

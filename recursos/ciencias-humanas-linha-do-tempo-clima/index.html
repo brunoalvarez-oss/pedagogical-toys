@@ -27,13 +27,7 @@
     <section class="panel">
       <h2>Linha do tempo</h2>
 
-      <div class="year-display">
-        <span class="yr" id="year-label">1900</span>
-        <span class="cap">ano selecionado — arraste para viajar no tempo</span>
-      </div>
-      <input type="range" id="year" min="1750" max="2025" step="1" value="1900" aria-label="Ano selecionado" style="width:100%; accent-color: var(--ciencias-humanas)">
-
-      <p class="muted" style="margin:16px 0 6px"><strong>Camadas opcionais.</strong> Ligue uma de cada vez e observe o que aparece no gráfico. Você não precisa das duas para começar.</p>
+      <p class="muted" style="margin:0 0 6px"><strong>Camadas opcionais.</strong> Ligue uma de cada vez e observe o que aparece no gráfico. Você não precisa de todas para começar.</p>
       <div class="layers">
         <label class="layer">
           <input type="checkbox" id="layer-co2" checked>
@@ -57,14 +51,30 @@
         </label>
       </div>
 
-      <p class="muted" style="margin:14px 0 6px"><strong>Tipos de acontecimento.</strong> Filtre o que aparece na linha do tempo.</p>
+      <p class="muted" style="margin:14px 0 6px"><strong>Tipos de acontecimento.</strong> Filtre o que aparece na linha do tempo. Quer ver só os <strong>acordos e conferências já realizados</strong>? Deixe ligado apenas o filtro <em>Acordos</em>.</p>
       <div class="event-strip" id="type-filter" role="group" aria-label="Filtrar tipos de acontecimento">
         <button class="event-btn" data-tipo="energia" aria-pressed="true"><span class="dot" style="background:#2563EB"></span>Energia</button>
         <button class="event-btn" data-tipo="sociedade" aria-pressed="true"><span class="dot" style="background:#D97706"></span>Sociedade</button>
         <button class="event-btn" data-tipo="clima" aria-pressed="true"><span class="dot" style="background:#16A34A"></span>Clima e ciência</button>
+        <button class="event-btn" data-tipo="acordos" aria-pressed="true"><span class="dot" style="background:#4338CA"></span>Acordos</button>
       </div>
 
-      <div class="chart-box"><canvas id="chart"></canvas></div>
+      <div class="year-display" style="margin-top:20px">
+        <span class="yr" id="year-label">1900</span>
+        <span class="cap">ano selecionado — arraste para viajar no tempo</span>
+      </div>
+      <!-- O slider fica logo acima do gráfico: o tracejado desce do polegar
+           até a base do gráfico, ligando visualmente o controle à curva. -->
+      <div class="year-slider-wrap" id="year-slider-wrap">
+        <input type="range" class="year-range" id="year" min="1750" max="2025" step="1" value="1900" aria-label="Ano selecionado">
+      </div>
+
+      <div class="chart-box">
+        <canvas id="chart"></canvas>
+        <div class="chart-tip" id="chart-tip"></div>
+      </div>
+
+      <p class="muted" style="margin:10px 0 0; text-align:center; font-size:.85rem">Passe o mouse sobre uma <strong>bolinha</strong> para ver o acontecimento — ou toque nela para saltar até aquele ano.</p>
 
       <div class="readouts" id="readouts"></div>
 
@@ -98,6 +108,21 @@
       </div>
     </section>
 
+    <!-- ================= PALAVRAS QUE APARECEM AQUI ================= -->
+    <section class="panel">
+      <h2>Palavras que aparecem aqui</h2>
+      <p class="muted">Um pequeno glossário para consultar antes ou durante a aula. São as palavras que costumam travar a leitura do gráfico.</p>
+      <ul class="glossario">
+        <li><span class="term">ppm — partes por milhão.</span> Uma forma de dizer o quanto de um gás existe no ar. Se de cada 1 milhão de "pedacinhos" de ar 424 são de gás carbônico, dizemos 424 ppm. É como contar quantas cadeiras vermelhas há num estádio de 1 milhão de lugares.</li>
+        <li><span class="term">ppb — partes por bilhão.</span> A mesma ideia, mas por bilhão (mil vezes mais fino). Usamos ppb para o metano e o óxido nitroso porque eles são <em>muito</em> mais raros no ar que o gás carbônico — por isso não dá para comparar a altura das curvas de gases diferentes, só o formato de cada uma.</li>
+        <li><span class="term">Anomalia de temperatura.</span> Não é a temperatura em si, e sim <em>o quanto</em> o planeta está mais quente (ou mais frio) que numa época de referência — aqui, antes da industrialização. Por isso os valores podem ser negativos: significa "mais frio que a referência".</li>
+        <li><span class="term">Efeito estufa.</span> Alguns gases do ar (gás carbônico, metano, óxido nitroso, vapor d'água) seguram parte do calor que a Terra devolveria para o espaço, como o vidro de uma estufa de plantas. Sem ele, o planeta seria gelado; em excesso, esquenta demais.</li>
+        <li><span class="term">Gás de efeito estufa.</span> Qualquer gás que ajuda a segurar esse calor. Neste recurso aparecem três deles.</li>
+        <li><span class="term">COP.</span> "Conferência das Partes" — a grande reunião anual em que os países negociam o que fazer sobre a mudança do clima. A COP21, em 2015, produziu o Acordo de Paris. O nome do recurso ("às COPs") vem daí.</li>
+        <li><span class="term">Correlação × causa.</span> Duas coisas <em>andarem juntas</em> (correlação) não prova que uma <em>fez</em> a outra acontecer (causa). Essa diferença é o coração das perguntas mais difíceis aqui.</li>
+      </ul>
+    </section>
+
     <!-- ================= PERGUNTAS PARA A TURMA ================= -->
     <section class="panel">
       <h2>Perguntas para a turma</h2>
@@ -127,7 +152,7 @@
           <span class="muted">Debatem correlação × causa e reconhecem que a decisão vem da ciência (Arrhenius, 1896; IPCC, 1988), não só do formato dos gráficos.</span></li>
         <li><strong>A ECO-92 foi no Brasil. Que responsabilidades e interesses diferentes têm países que se industrializaram cedo e países que industrializaram depois?</strong><br>
           <span class="muted">Conectam a linha do tempo a questões de geografia e cidadania: quem emitiu mais historicamente e quem paga a conta hoje.</span></li>
-        <li><strong>Esta linha do tempo escolheu 15 acontecimentos. Que outro fato você acha que faltou — e por quê ele mudaria a história contada aqui?</strong><br>
+        <li><strong>Esta linha do tempo escolheu alguns acontecimentos. Que outro fato você acha que faltou — e por quê ele mudaria a história contada aqui?</strong><br>
           <span class="muted">Percebem que toda linha do tempo é uma <em>seleção</em> feita por alguém: propor o que incluir é exercer autoria sobre a narrativa.</span></li>
       </ul>
     </section>
@@ -171,7 +196,7 @@
         <li><strong>As curvas dos gases juntam duas fontes.</strong> Os valores antigos vêm de bolhas de ar presas no gelo polar (testemunhos de gelo); os recentes, de medições diretas no ar (o CO₂, por exemplo, é medido desde 1958 no Havaí). São métodos diferentes costurados numa curva só.</li>
         <li><strong>A temperatura é uma média do mundo todo.</strong> Um número esconde enormes diferenças: alguns lugares esquentam muito mais, outros quase nada. E ela sobe "aos trancos", com anos mais quentes e mais frios pelo caminho.</li>
         <li><strong>Os valores são aproximados e arredondados</strong> para facilitar a leitura em sala. Para números oficiais, consulte fontes como o <strong>IPCC</strong>, a <strong>NASA/NOAA</strong> e o Observatório de Mauna Loa.</li>
-        <li><strong>Os 15 acontecimentos são uma escolha nossa.</strong> Outra pessoa montaria outra lista — e contaria outra história. Isso é um convite para a turma propor a própria versão.</li>
+        <li><strong>Os acontecimentos aqui são uma escolha nossa.</strong> Outra pessoa montaria outra lista — e contaria outra história. Isso é um convite para a turma propor a própria versão.</li>
       </ul>
     </section>
   </div>
@@ -186,7 +211,7 @@
     // DADOS CURADOS (aproximados e arredondados para leitura em sala).
     // CO2 em ppm; CH4 e N2O em ppb: testemunhos de gelo + medições diretas modernas.
     // Temperatura: anomalia em °C sobre a média pré-industrial (1850-1900).
-    // Acontecimentos: seleção editorial de 15 marcos entre 1750 e 2025.
+    // Acontecimentos: seleção editorial de marcos entre 1750 e 2025.
     // ---------------------------------------------------------------------
     var CO2 = [
       { x: 1750, y: 278 }, { x: 1800, y: 283 }, { x: 1850, y: 285 },
@@ -221,7 +246,8 @@
     var TIPOS = {
       energia:   { cor: "#2563EB", rotulo: "Energia",         classe: "tipo-energia" },
       sociedade: { cor: "#D97706", rotulo: "Sociedade",       classe: "tipo-sociedade" },
-      clima:     { cor: "#16A34A", rotulo: "Clima e ciência", classe: "tipo-clima" }
+      clima:     { cor: "#16A34A", rotulo: "Clima e ciência", classe: "tipo-clima" },
+      acordos:   { cor: "#4338CA", rotulo: "Acordos",         classe: "tipo-acordos" }
     };
 
     var EVENTOS = [
@@ -234,15 +260,24 @@
       { ano: 1859, tipo: "energia",   titulo: "Primeiro poço de petróleo",
         texto: "Edwin Drake perfura o primeiro poço comercial, nos EUA. Começa a era do petróleo, que se somaria ao carvão.",
         fonte: "Titusville, Pensilvânia (EUA)" },
+      { ano: 1882, tipo: "energia",   titulo: "A primeira usina elétrica",
+        texto: "Thomas Edison inaugura em Nova York a primeira central elétrica comercial, movida a carvão. A eletricidade começa a chegar às cidades.",
+        fonte: "Pearl Street Station, Nova York" },
       { ano: 1885, tipo: "energia",   titulo: "O automóvel a gasolina",
         texto: "Karl Benz constrói o primeiro carro movido a gasolina. Décadas depois, os transportes se tornariam uma das maiores fontes de emissões.",
         fonte: "Patente de Karl Benz, Alemanha" },
       { ano: 1896, tipo: "clima",     titulo: "Arrhenius prevê o aquecimento",
         texto: "O cientista Svante Arrhenius calcula, no papel, que mais CO₂ no ar deixaria o planeta mais quente. A ideia estava certa — só faltavam os dados.",
         fonte: "Svante Arrhenius, Suécia" },
+      { ano: 1908, tipo: "energia",   titulo: "Ford Modelo T",
+        texto: "O carro produzido em série torna o automóvel acessível a milhões. Começa a era do transporte de massa movido a combustível fóssil.",
+        fonte: "Ford, Estados Unidos" },
       { ano: 1914, tipo: "sociedade", titulo: "Primeira Guerra Mundial",
         texto: "A indústria bélica acelera a produção e o consumo de energia em escala nunca vista.",
         fonte: "1914–1918" },
+      { ano: 1938, tipo: "clima",     titulo: "Callendar liga CO₂ e temperatura",
+        texto: "O engenheiro Guy Callendar reúne dados e argumenta que a queima de combustíveis já estava aquecendo o planeta. Poucos acreditaram na época.",
+        fonte: "Guy Callendar, Reino Unido" },
       { ano: 1939, tipo: "sociedade", titulo: "Segunda Guerra Mundial",
         texto: "Nova escalada industrial e tecnológica. No pós-guerra, a economia mundial cresce em ritmo explosivo.",
         fonte: "1939–1945" },
@@ -252,31 +287,46 @@
       { ano: 1958, tipo: "clima",     titulo: "Keeling começa a medir o CO₂",
         texto: "Charles Keeling instala medidores no vulcão Mauna Loa (Havaí). Pela primeira vez, o mundo passa a acompanhar o CO₂ em tempo real.",
         fonte: "Observatório de Mauna Loa" },
-      { ano: 1972, tipo: "sociedade", titulo: "Conferência de Estocolmo",
-        texto: "A primeira grande conferência da ONU sobre o meio ambiente coloca o tema na agenda dos governos.",
+      { ano: 1962, tipo: "sociedade", titulo: "“Primavera Silenciosa”",
+        texto: "O livro de Rachel Carson denuncia os danos dos venenos agrícolas e ajuda a fazer nascer o movimento ambientalista moderno.",
+        fonte: "Rachel Carson, Estados Unidos" },
+      { ano: 1972, tipo: "acordos",   titulo: "Conferência de Estocolmo",
+        texto: "A primeira grande conferência da ONU sobre o meio ambiente coloca o tema na agenda dos governos do mundo todo.",
         fonte: "ONU, Estocolmo" },
+      { ano: 1987, tipo: "acordos",   titulo: "Protocolo de Montreal",
+        texto: "Os países se unem para banir gases que destruíam a camada de ozônio. Até hoje é lembrado como o acordo ambiental mais bem-sucedido da história.",
+        fonte: "ONU, Montreal" },
       { ano: 1988, tipo: "clima",     titulo: "Criação do IPCC",
         texto: "A ONU cria o Painel Intergovernamental sobre Mudança do Clima para reunir e revisar a ciência do aquecimento global.",
         fonte: "IPCC / ONU" },
-      { ano: 1992, tipo: "sociedade", titulo: "ECO-92, no Rio de Janeiro",
+      { ano: 1992, tipo: "acordos",   titulo: "ECO-92, no Rio de Janeiro",
         texto: "A Cúpula da Terra reúne o mundo no Brasil e cria a convenção do clima que daria origem às futuras COPs.",
         fonte: "ONU, Rio de Janeiro" },
-      { ano: 1997, tipo: "sociedade", titulo: "Protocolo de Kyoto",
+      { ano: 1997, tipo: "acordos",   titulo: "Protocolo de Kyoto",
         texto: "Primeiro acordo com metas de redução de emissões para os países mais ricos.",
         fonte: "COP3, Kyoto (Japão)" },
-      { ano: 2015, tipo: "sociedade", titulo: "Acordo de Paris",
+      { ano: 2015, tipo: "acordos",   titulo: "Acordo de Paris",
         texto: "Quase todos os países se comprometem a limitar o aquecimento bem abaixo de 2 °C, buscando 1,5 °C.",
         fonte: "COP21, Paris" },
+      { ano: 2018, tipo: "clima",     titulo: "Relatório do 1,5 °C",
+        texto: "O IPCC mostra como é grande a diferença entre 1,5 °C e 2 °C de aquecimento — e como sobra pouco tempo para agir.",
+        fonte: "Relatório Especial do IPCC" },
       { ano: 2019, tipo: "sociedade", titulo: "Greves pelo clima",
         texto: "Milhões de jovens vão às ruas em greves globais cobrando ação climática dos governos.",
-        fonte: "Movimento Fridays for Future" }
+        fonte: "Movimento Fridays for Future" },
+      { ano: 2021, tipo: "acordos",   titulo: "COP26, em Glasgow",
+        texto: "Pela primeira vez um acordo da ONU cita reduzir o uso do carvão e pede metas mais ambiciosas dos países.",
+        fonte: "COP26, Glasgow (Escócia)" },
+      { ano: 2023, tipo: "acordos",   titulo: "COP28, em Dubai",
+        texto: "O acordo final chama, pela primeira vez, a “transição para longe dos combustíveis fósseis” — carvão, petróleo e gás.",
+        fonte: "COP28, Dubai (Emirados Árabes)" }
     ];
 
     var YEAR_MIN = 1750, YEAR_MAX = 2025;
 
     // Estado da interface
     var year = 1900;
-    var tiposAtivos = { energia: true, sociedade: true, clima: true };
+    var tiposAtivos = { energia: true, sociedade: true, clima: true, acordos: true };
 
     // Interpola linearmente um valor y para um dado ano numa série {x,y}.
     // Retorna null se o ano estiver fora do alcance dos dados daquela série.
@@ -309,19 +359,24 @@
     // Plugin: linha-guia vertical no ano escolhido + bolinhas dos eventos
     // na base do gráfico (só dos tipos ativos), destacando o evento atual.
     // ---------------------------------------------------------------------
+    // Posições (em pixels de tela) das bolinhas desenhadas, para o balãozinho
+    // de hover e o clique-para-saltar. Recalculado a cada desenho do gráfico.
+    var dotHits = [];
+
     var timelineDeco = {
       id: "timelineDeco",
       afterDatasetsDraw: function (chart) {
         var x = chart.scales.x, area = chart.chartArea, ctx = chart.ctx;
         if (!x || !area) return;
 
-        // Linha-guia vertical no ano selecionado
+        // Linha-guia vertical no ano selecionado. Ela sobe até o topo do canvas
+        // (não só até a área de plotagem) para "encontrar" o slider logo acima.
         var gx = x.getPixelForValue(year);
         if (gx >= area.left && gx <= area.right) {
           ctx.save();
           ctx.beginPath();
           ctx.setLineDash([5, 5]);
-          ctx.moveTo(gx, area.top); ctx.lineTo(gx, area.bottom);
+          ctx.moveTo(gx, 0); ctx.lineTo(gx, area.bottom);
           ctx.strokeStyle = "rgba(35,34,43,.30)";
           ctx.lineWidth = 1.5;
           ctx.stroke();
@@ -331,9 +386,11 @@
         // Bolinhas dos eventos, na base do gráfico
         var atual = eventoAtual();
         var by = area.bottom - 7;
+        dotHits = [];
         eventosVisiveis().forEach(function (e) {
           var px = x.getPixelForValue(e.ano);
           if (px < area.left || px > area.right) return;
+          dotHits.push({ px: px, by: by, e: e });
           var ativo = atual && e.ano === atual.ano;
           ctx.save();
           ctx.beginPath();
@@ -348,8 +405,24 @@
           }
           ctx.restore();
         });
+
+        // Mantém o slider alinhado à área de plotagem a cada desenho
+        // (inclusive após redimensionar a janela ou ligar/desligar camadas).
+        alignSlider();
       }
     };
+
+    // Alinha a trilha do slider exatamente com a área de plotagem do gráfico,
+    // para que o polegar caia sempre sobre a linha-guia. O thumb tem 20px
+    // (raio 10), então recuamos as margens do slider em 10px de cada lado.
+    function alignSlider() {
+      if (!chart || !chart.chartArea) return;
+      var wrap = $("year-slider-wrap");
+      if (!wrap) return;
+      var ca = chart.chartArea, w = chart.width, r = 10;
+      wrap.style.marginLeft  = Math.max(0, ca.left - r) + "px";
+      wrap.style.marginRight = Math.max(0, (w - ca.right) - r) + "px";
+    }
 
     var chart = new Chart($("chart"), {
       type: "line",
@@ -410,8 +483,8 @@
         },
         plugins: {
           legend: {
-            position: "top",
-            labels: { font: { family: "Rethink Sans" }, usePointStyle: true }
+            position: "bottom",
+            labels: { font: { family: "Rethink Sans" }, usePointStyle: true, padding: 16 }
           },
           tooltip: {
             callbacks: {
@@ -521,6 +594,40 @@
       year = Math.max(YEAR_MIN, Math.min(YEAR_MAX, Math.round(y)));
       render();
     }
+
+    // Balãozinho ao passar o mouse sobre uma bolinha (e clique para saltar).
+    // Procura a bolinha mais próxima do ponteiro dentro de um raio de tolerância.
+    function bolinhaSob(ev) {
+      var cnv = $("chart"), rect = cnv.getBoundingClientRect();
+      var mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+      var achou = null, best = 15;
+      for (var i = 0; i < dotHits.length; i++) {
+        var d = dotHits[i];
+        var dist = Math.sqrt((mx - d.px) * (mx - d.px) + (my - d.by) * (my - d.by));
+        if (dist <= best) { best = dist; achou = d; }
+      }
+      return achou;
+    }
+
+    var tip = $("chart-tip");
+    $("chart").addEventListener("mousemove", function (ev) {
+      var d = bolinhaSob(ev);
+      if (d) {
+        this.style.cursor = "pointer";
+        tip.style.left = d.px + "px";
+        tip.style.top = (d.by - 9) + "px";
+        tip.innerHTML = '<span class="yr">' + d.e.ano + "</span>" + d.e.titulo;
+        tip.style.opacity = "1";
+      } else {
+        this.style.cursor = "";
+        tip.style.opacity = "0";
+      }
+    });
+    $("chart").addEventListener("mouseleave", function () { tip.style.opacity = "0"; });
+    $("chart").addEventListener("click", function (ev) {
+      var d = bolinhaSob(ev);
+      if (d) setYear(d.e.ano);
+    });
 
     // Eventos de interface
     $("year").addEventListener("input", function () { setYear(+$("year").value); });
