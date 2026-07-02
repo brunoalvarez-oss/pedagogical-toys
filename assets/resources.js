@@ -32,6 +32,19 @@ window.PEDAGOGICAL_RESOURCES = [
     tags: ["revolução industrial", "mudança climática", "gases de efeito estufa", "correlação e causa", "leitura de gráficos"],
     resumo: "Linha do tempo interativa de 1750 a hoje: o aluno cruza os marcos do mundo moderno com camadas opcionais dos gases de efeito estufa (CO₂, metano, óxido nitroso) e da temperatura — sem conta pesada, focando no raciocínio histórico e na diferença entre andar junto e causar.",
     path: "recursos/ciencias-humanas-linha-do-tempo-clima/index.html"
+  },
+  {
+    id: "ciencias-natureza-boia-ou-afunda",
+    titulo: "Boia ou afunda? Adivinhe e descubra",
+    area: "Ciências da Natureza",
+    areaSlug: "ciencias-natureza",
+    segmento: "Educação Infantil",
+    series: ["Pré-escola (4–5 anos)"],
+    assunto: "Flutuação: prever, observar e comparar",
+    habilidades: ["EI03ET01", "EI03ET05", "EI03ET04"],
+    tags: ["flutuação", "boia ou afunda", "previsão", "método científico", "propriedades dos objetos", "água"],
+    resumo: "Brincadeira científica para os pequenos: a criança arrisca um palpite (boia ou afunda?), solta o objeto na água e compara com o que aconteceu. Objetos escolhidos de propósito para quebrar a ideia de que 'grande afunda' — a maçã boia, a moeda afunda. O foco é prever, observar e mudar de ideia diante da evidência.",
+    path: "recursos/ciencias-natureza-boia-ou-afunda/index.html"
   }
   // Próximos recursos entram aqui (veja recursos/_template/ e o README).
 ];

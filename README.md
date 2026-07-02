@@ -13,10 +13,11 @@ criticidade para saber o que se quer e conseguir tirar a ideia do papel.
 |---|---|---|---|
 | Álbum da Copa: quando fica difícil não repetir? | Matemática | Ensino Médio | Funções e probabilidade |
 | Do carvão às COPs: uma linha do tempo do clima e do mundo moderno | Ciências Humanas | Anos Finais (9º ano) | Mundo contemporâneo e mudança climática |
+| Boia ou afunda? Adivinhe e descubra | Ciências da Natureza | Educação Infantil | Flutuação: prever, observar e comparar |
 
 Cada recurso traz **habilidades trabalhadas (BNCC)** e **séries indicadas**.
 A biblioteca cresce por contribuição dos colegas — a próxima leva prevê também
-recursos de Linguagens e Ciências da Natureza.
+recursos de Linguagens.
 
 ## Como rodar
 
@@ -47,6 +48,7 @@ recursos/
   _template/             Modelo comentado para criar um recurso novo
   matematica-figurinhas/ Recurso de Matemática (funções e probabilidade)
   ciencias-humanas-linha-do-tempo-clima/ Recurso de Ciências Humanas (clima e mundo moderno)
+  ciencias-natureza-boia-ou-afunda/ Recurso de Ciências da Natureza (flutuação, Educação Infantil)
 ```
 
 ## Como adicionar um recurso (compartilhamento entre pares)

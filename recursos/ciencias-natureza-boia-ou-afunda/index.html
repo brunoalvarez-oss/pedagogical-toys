@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<!-- =========================================================================
+     Boia ou afunda? — recurso de Ciências da Natureza para a Educação Infantil.
+     Autocontido: toda a lógica e o estilo do "aquário" vivem nesta página.
+     O ciclo é científico de propósito: PREVER → OBSERVAR → COMPARAR.
+     ========================================================================= -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boia ou afunda? · Ciências da Natureza</title>
+  <meta name="description" content="Brincadeira científica para a Educação Infantil: a criança prevê se cada objeto vai boiar ou afundar, testa na água e compara o palpite com o que aconteceu.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <style>
+    /* ---- O aquário e a brincadeira (estilo local, só deste recurso) ---- */
+    .jogo { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: start; }
+    @media (max-width: 760px) { .jogo { grid-template-columns: 1fr; } }
+
+    /* Tanque de água */
+    .tanque {
+      position: relative; width: 100%; height: 320px; border-radius: 18px;
+      overflow: hidden; border: 1px solid var(--line);
+      background: linear-gradient(#EAF6FF 0 40%, #BFE6FB 40% 42%, #8CD1F5 42% 100%);
+      box-shadow: inset 0 -18px 40px rgba(9, 90, 140, .15);
+    }
+    /* Linha da superfície da água (40% do topo) */
+    .tanque::before {
+      content: ""; position: absolute; left: 0; right: 0; top: 40%;
+      height: 2px; background: rgba(255, 255, 255, .7);
+    }
+    .agua-label {
+      position: absolute; right: 12px; bottom: 10px; font-size: .8rem;
+      color: #1f6690; font-weight: 700; letter-spacing: .02em; opacity: .8;
+    }
+    .placa {
+      position: absolute; left: 0; right: 0; top: 42%; bottom: 0;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      color: #2b7aa8; font-weight: 700; padding: 0 24px; font-size: 1.02rem;
+    }
+
+    /* O objeto dentro do tanque */
+    .objeto {
+      position: absolute; left: 50%; top: 18%;
+      transform: translate(-50%, -50%);
+      font-size: 3.4rem; line-height: 1; user-select: none;
+      transition: top 1.1s cubic-bezier(.34, 1.2, .5, 1);
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .18));
+      z-index: 2;
+    }
+    .objeto.esperando { top: 20%; animation: flutua-espera 1.6s ease-in-out infinite; }
+    .objeto.boiando   { top: 34%; animation: boia-bob 2.4s ease-in-out infinite; }
+    .objeto.afundando { top: 82%; }
+    @keyframes flutua-espera { 0%,100% { transform: translate(-50%, -50%) rotate(-4deg); } 50% { transform: translate(-50%, -58%) rotate(4deg); } }
+    @keyframes boia-bob      { 0%,100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, -60%); } }
+
+    /* Ondinha que aparece quando o objeto encosta na água */
+    .ripple {
+      position: absolute; left: 50%; top: 40%; width: 24px; height: 24px;
+      border: 2px solid rgba(255, 255, 255, .85); border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; z-index: 1;
+    }
+    .ripple.go { animation: ripple 900ms ease-out; }
+    @keyframes ripple { 0% { transform: translate(-50%, -50%) scale(.2); opacity: .9; } 100% { transform: translate(-50%, -50%) scale(6); opacity: 0; } }
+
+    /* Bandeja de objetos para escolher */
+    .bandeja { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+    .obj-btn {
+      font-size: 2rem; line-height: 1; width: 60px; height: 60px; cursor: pointer;
+      background: var(--surface); border: 2px solid var(--line); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; transition: .12s;
+    }
+    .obj-btn:hover { border-color: var(--ciencias-natureza); transform: translateY(-2px); }
+    .obj-btn:focus-visible { outline: 3px solid var(--ciencias-natureza-soft); outline-offset: 2px; }
+    .obj-btn.usado { opacity: .32; }
+    .obj-btn.ativo { border-color: var(--ciencias-natureza); background: var(--ciencias-natureza-soft); }
+
+    /* Botões grandes de palpite */
+    .palpites { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 6px; }
+    .palpite {
+      font-family: inherit; font-size: 1.15rem; font-weight: 800; cursor: pointer;
+      padding: 16px 12px; border-radius: 14px; border: 2px solid var(--line);
+      background: var(--surface); color: var(--ink); transition: .12s;
+    }
+    .palpite:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+    .palpite:disabled { opacity: .4; cursor: default; }
+    .palpite.boiar   { border-color: #7CC6F0; }
+    .palpite.afundar { border-color: #E3A76B; }
+    .palpite .emo { font-size: 1.5rem; display: block; }
+
+    /* Faixa de resultado */
+    .resultado {
+      min-height: 78px; border-radius: 14px; padding: 14px 16px; margin-top: 6px;
+      background: var(--bg); border: 1px dashed var(--line); color: var(--ink-soft);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .resultado.acerto  { background: var(--ciencias-natureza-soft); border-color: transparent; color: #1f7a52; }
+    .resultado.surpresa { background: #FFF4E0; border-color: transparent; color: #9c6a12; }
+    .resultado .big { font-weight: 800; font-size: 1.05rem; }
+    .resultado .porque { color: inherit; opacity: .92; font-size: .95rem; margin-top: 3px; }
+
+    /* Placar */
+    .placar { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 2px; }
+    .placar .num {
+      background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+      padding: 8px 14px; font-size: .9rem; color: var(--ink-soft);
+    }
+    .placar .num strong { display: block; font-size: 1.5rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+    /* Duas colunas: o que boiou / o que afundou */
+    .colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+    .coluna { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; min-height: 92px; }
+    .coluna h4 { margin: 0 0 8px; font-size: .92rem; font-weight: 800; }
+    .coluna.boiou h4   { color: #1f6690; }
+    .coluna.afundou h4 { color: #9c6a12; }
+    .coluna .itens { display: flex; flex-wrap: wrap; gap: 6px; font-size: 1.7rem; line-height: 1.1; }
+    .coluna .vazio { color: var(--ink-soft); font-size: .85rem; font-weight: 400; }
+
+    .narrar { display: inline-flex; align-items: center; gap: 8px; font-size: .92rem; color: var(--ink-soft); margin-top: 14px; cursor: pointer; }
+    .narrar input { width: 18px; height: 18px; accent-color: var(--ciencias-natureza); }
+
+    .acoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .dica-topo { color: var(--ink-soft); font-size: .95rem; margin: 0 0 14px; }
+  </style>
+</head>
+<body class="theme-ciencias-natureza">
+  <div class="wrap resource">
+    <a class="backlink" href="../../index.html">← Voltar à biblioteca</a>
+
+    <header class="resource-head">
+      <div class="top">
+        <span class="badge area-ciencias-natureza">Ciências da Natureza</span>
+        <span class="badge seg">Educação Infantil</span>
+      </div>
+      <h1>Boia ou afunda? Adivinhe e descubra</h1>
+      <p class="lead">A criança primeiro <strong>arrisca um palpite</strong>, depois <strong>coloca o objeto na água</strong> e vê o que acontece — e então <strong>compara</strong>: acertei? me surpreendi? Mudar de ideia diante do que a gente observa é o começo do pensamento científico.</p>
+    </header>
+
+    <!-- ================= A BRINCADEIRA ================= -->
+    <section class="panel">
+      <h2>A brincadeira</h2>
+      <p class="dica-topo">1. Escolha um objeto &nbsp;→&nbsp; 2. Diga se ele vai boiar ou afundar &nbsp;→&nbsp; 3. Solte na água e descubra!</p>
+
+      <div class="jogo">
+        <!-- Coluna esquerda: o tanque -->
+        <div>
+          <div class="tanque" id="tanque" aria-live="polite">
+            <span class="agua-label">água</span>
+            <div class="placa" id="placa">Escolha um objeto na lista ao lado 👉</div>
+            <div class="ripple" id="ripple"></div>
+            <div class="objeto" id="objeto" style="display:none" aria-hidden="true"></div>
+          </div>
+
+          <div class="palpites">
+            <button class="palpite boiar" id="btn-boiar" disabled>
+              <span class="emo">☝️</span> Vai boiar
+            </button>
+            <button class="palpite afundar" id="btn-afundar" disabled>
+              <span class="emo">👇</span> Vai afundar
+            </button>
+          </div>
+
+          <div class="resultado" id="resultado">Faça seu palpite antes de soltar o objeto na água.</div>
+        </div>
+
+        <!-- Coluna direita: bandeja, placar e colunas -->
+        <div>
+          <h3 style="margin-top:0">Objetos para testar</h3>
+          <div class="bandeja" id="bandeja"></div>
+
+          <div class="placar">
+            <div class="num"><strong id="n-testados">0</strong> testados</div>
+            <div class="num"><strong id="n-acertos">0</strong> palpites certos</div>
+          </div>
+
+          <div class="colunas">
+            <div class="coluna boiou">
+              <h4>☝️ Boiaram</h4>
+              <div class="itens" id="col-boiou"><span class="vazio">Nada ainda.</span></div>
+            </div>
+            <div class="coluna afundou">
+              <h4>👇 Afundaram</h4>
+              <div class="itens" id="col-afundou"><span class="vazio">Nada ainda.</span></div>
+            </div>
+          </div>
+
+          <label class="narrar" id="narrar-wrap" style="display:none">
+            <input type="checkbox" id="narrar"> Ler em voz alta (para quem ainda não lê)
+          </label>
+
+          <div class="acoes">
+            <button class="btn" id="reiniciar">Recomeçar do zero</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= COMO USAR EM SALA ================= -->
+    <section class="panel">
+      <h2>Como usar em sala</h2>
+      <p>A tela é só o apoio — o coração da atividade é a conversa. Uma rotina simples que
+         funciona bem com crianças de 4 e 5 anos:</p>
+      <p><strong>1. Prever.</strong> Antes de qualquer teste, pergunte: <em>“O que você acha que vai
+         acontecer? Por quê?”</em> Todo palpite vale — inclusive os “errados”. O importante é a criança
+         se comprometer com uma ideia.</p>
+      <p><strong>2. Observar.</strong> Solte o objeto e olhem juntos. <em>“Foi o que você imaginou?”</em></p>
+      <p><strong>3. Comparar.</strong> Depois de vários testes, olhem as duas colunas: <em>“O que os que
+         boiaram têm em comum? E os que afundaram?”</em> Aqui nascem as primeiras hipóteses da turma.</p>
+      <div class="note">
+        <strong>Perguntas para provocar:</strong>
+        <ul style="margin:8px 0 0; padding-left:20px">
+          <li>Uma coisa grande sempre afunda? (mostre a maçã e a moeda)</li>
+          <li>E se a gente amassar a folha? E se furar o patinho?</li>
+          <li>Por que um navio de metal enorme boia, se a moeda de metal afunda?</li>
+        </ul>
+      </div>
+      <p class="muted" style="margin-top:14px">Dica: repita com objetos <strong>de verdade</strong> numa
+         bacia com água. A tela ajuda a organizar o pensamento; a água molhada é insubstituível.</p>
+    </section>
+
+    <!-- ================= O QUE ESTA BRINCADEIRA SIMPLIFICA ================= -->
+    <section class="panel">
+      <h2>O que esta brincadeira simplifica</h2>
+      <p>Enxergar onde a ferramenta “arredonda” a realidade é parte do que queremos ensinar — mesmo
+         que, com os pequenos, isso apareça só nas suas respostas às perguntas deles.</p>
+      <p>Aqui, dizemos que um objeto “boia ou afunda”, mas na vida real depende de detalhes:</p>
+      <ul>
+        <li><strong>Não é só o peso — é o peso <em>para o tamanho</em>.</strong> Uma pedrinha pequena
+           afunda e um tronco enorme boia. O que conta é quão “apertada” é a matéria (a densidade),
+           uma ideia que essas crianças ainda vão construir por muitos anos.</li>
+        <li><strong>A forma e o ar preso mudam tudo.</strong> Um pedaço de metal afunda, mas um barco
+           de metal boia porque é oco e cheio de ar. Amasse uma folha de alumínio numa bolinha: ela
+           pode afundar.</li>
+        <li><strong>Alguns objetos mudam com o tempo.</strong> Uma esponja boia e depois afunda ao
+           encher de água; uma laranja boia com casca e afunda sem ela.</li>
+      </ul>
+      <div class="note">
+        <strong>Para o professor:</strong> não é preciso “dar a resposta certa” sobre densidade. Basta
+        acolher as hipóteses das crianças e devolver boas perguntas. A dúvida bem cuidada vale mais
+        que a definição decorada.
+      </div>
+    </section>
+
+    <!-- ================= METADADOS ================= -->
+    <section class="panel">
+      <h2>Habilidades e séries</h2>
+      <div class="meta-grid">
+        <div>
+          <h3 style="margin-top:0">Habilidades trabalhadas (BNCC)</h3>
+          <div class="skill"><code>EI03ET01</code><span class="desc">Estabelecer relações de comparação entre objetos, observando suas propriedades.</span></div>
+          <div class="skill"><code>EI03ET05</code><span class="desc">Classificar objetos e figuras de acordo com suas semelhanças e diferenças.</span></div>
+          <div class="skill"><code>EI03ET04</code><span class="desc">Registrar observações, manipulações e medidas usando múltiplas linguagens.</span></div>
+        </div>
+        <div>
+          <h3 style="margin-top:0">Séries indicadas</h3>
+          <div class="pill-list"><span class="pill">Pré-escola (4–5 anos)</span></div>
+          <h3>Campo de experiências</h3>
+          <div class="pill-list"><span class="pill">Espaços, tempos, quantidades, relações e transformações</span></div>
+          <h3>Assunto</h3>
+          <div class="pill-list"><span class="pill">Flutuação: prever, observar e comparar</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-footer"><div class="wrap">Biblioteca de Recursos Pedagógicos</div></footer>
+
+  <script>
+  (function () {
+    "use strict";
+
+    // ---- Os objetos. "boia: true" = flutua. "porque" é uma pista simples. ----
+    // Escolhidos de propósito para quebrar a ideia de que "grande afunda / pequeno boia":
+    // a maçã (grande) boia; a moeda (pequena) afunda.
+    var OBJETOS = [
+      { emoji: "🍎", nome: "a maçã",               boia: true,  porque: "Tem bastante ar dentro e é leve para o tamanho dela." },
+      { emoji: "🪨", nome: "a pedra",              boia: false, porque: "É bem pesada para o tamanho — a matéria dela é apertadinha." },
+      { emoji: "🦆", nome: "o patinho de borracha", boia: true,  porque: "É oco e cheio de ar, por isso fica na superfície." },
+      { emoji: "🔑", nome: "a chave",              boia: false, porque: "Metal é pesado para o tamanho e afunda." },
+      { emoji: "🍂", nome: "a folha",              boia: true,  porque: "É fininha e leve, e se apoia na água." },
+      { emoji: "🥄", nome: "a colher de metal",    boia: false, porque: "O metal é pesado para o tamanho e leva a colher para o fundo." },
+      { emoji: "🪵", nome: "o pedaço de madeira",  boia: true,  porque: "A madeira é leve para o tamanho e tem ar dentro." },
+      { emoji: "🪙", nome: "a moeda",              boia: false, porque: "É pequena, mas o metal é pesado para o tamanho: afunda." },
+      { emoji: "🍊", nome: "a laranja",            boia: true,  porque: "A casca cheia de bolsinhas de ar ajuda a boiar." },
+      { emoji: "🧱", nome: "o tijolo",             boia: false, porque: "É denso e pesado para o tamanho, então vai ao fundo." }
+    ];
+
+    function $(id) { return document.getElementById(id); }
+
+    var bandeja = $("bandeja");
+    var tanque = $("tanque"), placa = $("placa"), objetoEl = $("objeto"), ripple = $("ripple");
+    var btnBoiar = $("btn-boiar"), btnAfundar = $("btn-afundar");
+    var resultado = $("resultado");
+    var nTestados = $("n-testados"), nAcertos = $("n-acertos");
+    var colBoiou = $("col-boiou"), colAfundou = $("col-afundou");
+    var reiniciar = $("reiniciar");
+
+    var atual = null;      // objeto escolhido (ainda não testado)
+    var atualBtn = null;   // botão da bandeja correspondente
+    var testados = 0, acertos = 0;
+    var jaBoiaram = [], jaAfundaram = [];
+    var usados = {};       // índices já testados
+
+    // ---- Narração opcional (só aparece se o navegador souber falar) --------
+    var podeFalar = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+    if (podeFalar) $("narrar-wrap").style.display = "inline-flex";
+    function falar(txt) {
+      if (!podeFalar || !$("narrar").checked) return;
+      try {
+        window.speechSynthesis.cancel();
+        var u = new SpeechSynthesisUtterance(txt);
+        u.lang = "pt-BR"; u.rate = .95;
+        window.speechSynthesis.speak(u);
+      } catch (e) { /* silêncio se não rolar */ }
+    }
+
+    // ---- Monta a bandeja de objetos ---------------------------------------
+    OBJETOS.forEach(function (o, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "obj-btn";
+      b.textContent = o.emoji;
+      b.setAttribute("aria-label", "Escolher " + o.nome);
+      b.addEventListener("click", function () { escolher(i, b); });
+      bandeja.appendChild(b);
+    });
+
+    // ---- Escolher um objeto: ele entra no tanque, "boiando de leve" --------
+    function escolher(i, btn) {
+      if (usados[i]) return;              // já foi testado
+      atual = OBJETOS[i];
+      if (atualBtn) atualBtn.classList.remove("ativo");
+      atualBtn = btn; btn.classList.add("ativo");
+
+      placa.style.display = "none";
+      objetoEl.style.display = "";
+      objetoEl.textContent = atual.emoji;
+      objetoEl.className = "objeto esperando";
+
+      btnBoiar.disabled = false;
+      btnAfundar.disabled = false;
+      resultado.className = "resultado";
+      resultado.textContent = "Qual é o seu palpite para " + atual.nome + "?";
+      falar("Você escolheu " + atual.nome + ". Vai boiar ou vai afundar?");
+    }
+
+    // ---- Fazer o palpite e revelar o resultado ----------------------------
+    function palpitar(previu) {         // previu = true significa "vai boiar"
+      if (!atual) return;
+      btnBoiar.disabled = true;
+      btnAfundar.disabled = true;
+
+      // Ondinha na superfície + animação de boiar/afundar
+      ripple.classList.remove("go"); void ripple.offsetWidth; ripple.classList.add("go");
+      objetoEl.className = "objeto " + (atual.boia ? "boiando" : "afundando");
+
+      var acertou = (previu === atual.boia);
+      if (acertou) acertos++;
+      testados++;
+
+      var palpiteTxt = previu ? "vai boiar ☝️" : "vai afundar 👇";
+      var aconteceu = atual.boia ? "boiou!" : "afundou!";
+      var msg, frase;
+      if (acertou) {
+        resultado.className = "resultado acerto";
+        msg = "Seu palpite: " + palpiteTxt + " — e " + aconteceu + " 🎉";
+        frase = "Você acertou! " + capitaliza(atual.nome) + " " + (atual.boia ? "boiou" : "afundou") + ".";
+      } else {
+        resultado.className = "resultado surpresa";
+        msg = "Seu palpite: " + palpiteTxt + " — mas " + aconteceu + " Que surpresa! 🤔";
+        frase = "Que surpresa! " + capitaliza(atual.nome) + " " + (atual.boia ? "boiou" : "afundou") + ".";
+      }
+      resultado.innerHTML = '<span class="big">' + msg + '</span>' +
+        '<span class="porque">' + atual.porque + '</span>';
+      falar(frase + " " + atual.porque);
+
+      // Guarda nas colunas e no placar
+      (atual.boia ? jaBoiaram : jaAfundaram).push(atual.emoji);
+      var idx = OBJETOS.indexOf(atual);
+      usados[idx] = true;
+      atualBtn.classList.add("usado");
+      atualBtn.classList.remove("ativo");
+
+      atual = null; atualBtn = null;
+      pintar();
+    }
+
+    function capitaliza(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    function pintar() {
+      nTestados.textContent = testados;
+      nAcertos.textContent = acertos;
+      colBoiou.innerHTML = jaBoiaram.length
+        ? jaBoiaram.map(function (e) { return "<span>" + e + "</span>"; }).join("")
+        : '<span class="vazio">Nada ainda.</span>';
+      colAfundou.innerHTML = jaAfundaram.length
+        ? jaAfundaram.map(function (e) { return "<span>" + e + "</span>"; }).join("")
+        : '<span class="vazio">Nada ainda.</span>';
+    }
+
+    btnBoiar.addEventListener("click", function () { palpitar(true); });
+    btnAfundar.addEventListener("click", function () { palpitar(false); });
+
+    reiniciar.addEventListener("click", function () {
+      atual = null; atualBtn = null; testados = 0; acertos = 0;
+      jaBoiaram = []; jaAfundaram = []; usados = {};
+      objetoEl.style.display = "none"; objetoEl.className = "objeto";
+      placa.style.display = ""; placa.textContent = "Escolha um objeto na lista ao lado 👉";
+      btnBoiar.disabled = true; btnAfundar.disabled = true;
+      resultado.className = "resultado";
+      resultado.textContent = "Faça seu palpite antes de soltar o objeto na água.";
+      Array.prototype.forEach.call(bandeja.querySelectorAll(".obj-btn"), function (b) {
+        b.classList.remove("usado", "ativo");
+      });
+      pintar();
+    });
+  })();
+  </script>
+</body>
+</html>
