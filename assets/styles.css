@@ -152,6 +152,27 @@ a { color: inherit; }
 .area-ciencias-natureza { background: var(--ciencias-natureza-soft); color: #1f7a52; }
 .area-ciencias-humanas  { background: var(--ciencias-humanas-soft);  color: #9c6a12; }
 
+/* Avaliação por estrelas no rodapé do card */
+.rating {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+  margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line);
+}
+.stars { display: inline-flex; gap: 3px; }
+.star {
+  font-size: 1.2rem; line-height: 1; cursor: pointer; color: #D9D6CC;
+  user-select: none; transition: color .12s ease, transform .08s ease;
+}
+.star:hover { transform: scale(1.12); }
+.star.on { color: #E8A81B; }
+/* Durante a pré-visualização (mouse em cima), só as estrelas percorridas acendem */
+.stars.previewing .star { color: #D9D6CC; }
+.stars.previewing .star.hover { color: #F2B01E; }
+.rating-meta { font-size: .82rem; color: var(--ink-soft); }
+.rating-meta strong { color: var(--ink); font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* Aviso discreto de que os votos ficam no navegador (site sem servidor) */
+.grid-note { color: var(--ink-soft); font-size: .85rem; margin: 0 0 18px; }
+
 .empty { grid-column: 1 / -1; text-align: center; color: var(--ink-soft); padding: 48px 0; }
 
 /* =========================================================================

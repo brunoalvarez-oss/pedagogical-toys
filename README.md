@@ -41,6 +41,7 @@ assets/
   styles.css             Design system compartilhado (cores claras, fonte Rethink Sans)
   resources.js           Catálogo — fonte única de verdade dos recursos
   filters.js             Busca e filtros da página inicial
+  ratings.js             Avaliação por estrelas (salva no navegador; troque por um servidor p/ placar único)
   vendor/                Chart.js embutido (funciona offline)
 recursos/
   _template/             Modelo comentado para criar um recurso novo

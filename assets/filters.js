@@ -88,6 +88,29 @@
     return true;
   }
 
+  // ---- Avaliação por estrelas (média + votos) ----------------------------
+  function votosTexto(res) {
+    return "<strong>" + res.avg.toFixed(1).replace(".", ",") + "</strong> · " +
+      res.count + (res.count === 1 ? " voto" : " votos");
+  }
+
+  function ratingHTML(r) {
+    var res = window.RATINGS.get(r.id);
+    var filled = Math.round(res.avg);
+    var stars = "";
+    for (var i = 1; i <= 5; i++) {
+      stars += '<span class="star' + (i <= filled ? " on" : "") + '" role="button" tabindex="0"' +
+        ' data-val="' + i + '" aria-label="Dar ' + i + (i === 1 ? " estrela" : " estrelas") + '">★</span>';
+    }
+    var meta = res.count ? votosTexto(res) : "Seja o primeiro a avaliar";
+    return (
+      '<div class="rating" data-id="' + esc(r.id) + '">' +
+        '<div class="stars" role="group" aria-label="Avaliar este recurso">' + stars + "</div>" +
+        '<span class="rating-meta">' + meta + "</span>" +
+      "</div>"
+    );
+  }
+
   // ---- Card --------------------------------------------------------------
   function cardHTML(r) {
     var habs = r.habilidades.map(function (h) { return '<span class="hab">' + esc(h) + "</span>"; }).join("");
@@ -109,8 +132,48 @@
             '<div class="facet-vals">' + habs + "</div>" +
           "</div>" +
         "</div>" +
+        ratingHTML(r) +
       "</a>"
     );
+  }
+
+  // Liga as estrelas depois de (re)desenhar os cards. Como os cards são links,
+  // cada clique/tecla nas estrelas cancela a navegação (preventDefault).
+  function wireRatings() {
+    Array.prototype.forEach.call(grid.querySelectorAll(".rating"), function (box) {
+      var id = box.getAttribute("data-id");
+      var starsWrap = box.querySelector(".stars");
+      var stars = box.querySelectorAll(".star");
+      var metaEl = box.querySelector(".rating-meta");
+
+      function preview(n) {
+        if (n > 0) starsWrap.classList.add("previewing"); else starsWrap.classList.remove("previewing");
+        Array.prototype.forEach.call(stars, function (s, i) { s.classList.toggle("hover", i < n); });
+      }
+
+      function registrar(val) {
+        var res = window.RATINGS.vote(id, val);
+        var filled = Math.round(res.avg);
+        starsWrap.classList.remove("previewing");
+        Array.prototype.forEach.call(stars, function (s, i) {
+          s.classList.toggle("on", i < filled);
+          s.classList.remove("hover");
+        });
+        metaEl.innerHTML = votosTexto(res);
+      }
+
+      Array.prototype.forEach.call(stars, function (s) {
+        var val = +s.getAttribute("data-val");
+        s.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); registrar(val); });
+        s.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") { e.preventDefault(); e.stopPropagation(); registrar(val); }
+        });
+        s.addEventListener("mouseenter", function () { preview(val); });
+      });
+      starsWrap.addEventListener("mouseleave", function () { preview(0); });
+      // Cliques nas sobras da linha (fora das estrelas) não devem abrir o card.
+      box.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); });
+    });
   }
 
   function render() {
@@ -119,6 +182,7 @@
       ? list.map(cardHTML).join("")
       : '<p class="empty">Nenhum recurso encontrado com esses filtros. Tente limpar alguns.</p>';
     countEl.textContent = list.length + (list.length === 1 ? " recurso" : " recursos");
+    wireRatings();
   }
 
   function esc(s) {
