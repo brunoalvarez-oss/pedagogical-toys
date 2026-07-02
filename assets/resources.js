@@ -47,8 +47,8 @@ window.PEDAGOGICAL_RESOURCES = [
     path: "recursos/ciencias-natureza-boia-ou-afunda/index.html"
   },
   {
-    id: "linguagens-troca-troca-sinonimos",
-    titulo: "Troca-troca de sinônimos",
+    id: "linguagens-sinonimos",
+    titulo: "Qual palavra combina? Um jogo de sinônimos",
     area: "Linguagens",
     areaSlug: "linguagens",
     segmento: "Anos Iniciais",
@@ -57,7 +57,7 @@ window.PEDAGOGICAL_RESOURCES = [
     habilidades: ["EF35LP06", "EF35LP08"],
     tags: ["sinônimos", "vocabulário", "sentido das palavras", "coesão", "substituição lexical", "leitura em voz alta"],
     resumo: "A criança troca uma palavra da frase por sinônimos e percebe o que muda: a força, o clima, às vezes o próprio sentido. Mostra que sinônimo 'perfeito' quase não existe e que escolher a palavra certa depende do contexto — uma decisão de quem escreve.",
-    path: "recursos/linguagens-troca-troca-sinonimos/index.html"
+    path: "recursos/linguagens-sinonimos/index.html"
   }
   // Próximos recursos entram aqui (veja recursos/_template/ e o README).
 ];

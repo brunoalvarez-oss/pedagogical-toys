@@ -1,15 +1,30 @@
 /* =========================================================================
    Filtro client-side da página inicial. Sem dependências, sem servidor.
    Lê window.PEDAGOGICAL_RESOURCES (definido em assets/resources.js).
+
+   Dois comportamentos importantes:
+   - Facetas dependentes: ao escolher uma área (ou qualquer filtro), as demais
+     facetas passam a mostrar só os valores que ainda levam a algum resultado.
+   - Listas longas: cada faceta mostra no máximo MAX_CHIPS chips e ganha um
+     botão "ver mais" — pensando no dia em que todas as habilidades da BNCC
+     estiverem aqui e a lista ficaria imensa.
    ========================================================================= */
 (function () {
   var RESOURCES = window.PEDAGOGICAL_RESOURCES || [];
+
+  // Quantos chips mostrar antes de colapsar numa faceta (o resto fica no "ver mais").
+  var MAX_CHIPS = 12;
 
   // Estado dos filtros ativos (conjuntos de valores selecionados) + busca textual
   var state = { area: new Set(), segmento: new Set(), serie: new Set(), habilidade: new Set(), q: "" };
 
   var grid = document.getElementById("grid");
   var countEl = document.getElementById("count");
+
+  function orderSegmentos(arr) {
+    var ordem = ["Educação Infantil", "Anos Iniciais", "Anos Finais", "Ensino Médio"];
+    return arr.slice().sort(function (a, b) { return ordem.indexOf(a) - ordem.indexOf(b); });
+  }
 
   // ---- Monta os valores únicos de cada faceta ----------------------------
   function uniq(getter) {
@@ -21,17 +36,18 @@
     return Array.from(s);
   }
 
+  // Cada faceta conhece de onde tira o valor no recurso (getter). É o mesmo
+  // getter usado para montar os chips e para calcular quais ainda são possíveis.
   var facets = {
-    area:       { el: document.getElementById("filter-area"),       values: uniq(function (r) { return r.area; }) },
-    segmento:   { el: document.getElementById("filter-segmento"),   values: orderSegmentos(uniq(function (r) { return r.segmento; })) },
-    serie:      { el: document.getElementById("filter-serie"),      values: uniq(function (r) { return r.series; }) },
-    habilidade: { el: document.getElementById("filter-habilidade"), values: uniq(function (r) { return r.habilidades; }).sort() }
+    area:       { el: document.getElementById("filter-area"),       getter: function (r) { return r.area; } },
+    segmento:   { el: document.getElementById("filter-segmento"),   getter: function (r) { return r.segmento; } },
+    serie:      { el: document.getElementById("filter-serie"),      getter: function (r) { return r.series; } },
+    habilidade: { el: document.getElementById("filter-habilidade"), getter: function (r) { return r.habilidades; } }
   };
-
-  function orderSegmentos(arr) {
-    var ordem = ["Educação Infantil", "Anos Iniciais", "Anos Finais", "Ensino Médio"];
-    return arr.slice().sort(function (a, b) { return ordem.indexOf(a) - ordem.indexOf(b); });
-  }
+  facets.area.values       = uniq(facets.area.getter);
+  facets.segmento.values   = orderSegmentos(uniq(facets.segmento.getter));
+  facets.serie.values      = uniq(facets.serie.getter);
+  facets.habilidade.values = uniq(facets.habilidade.getter).sort();
 
   // Nome da área -> slug (para colorir os chips do filtro como nos cards)
   var areaSlugByName = {};
@@ -40,6 +56,9 @@
   // ---- Renderiza os chips de cada faceta ---------------------------------
   Object.keys(facets).forEach(function (key) {
     var f = facets[key];
+    f.group = f.el.closest(".filter-group");
+    f.expanded = false;
+    f.chips = [];
     f.values.forEach(function (value) {
       var chip = document.createElement("button");
       chip.className = "chip";
@@ -57,7 +76,20 @@
         render();
       });
       f.el.appendChild(chip);
+      f.chips.push({ value: value, el: chip });
     });
+
+    // Botão "ver mais / ver menos" — só aparece quando há chips escondidos.
+    var more = document.createElement("button");
+    more.type = "button";
+    more.className = "chip chip-more";
+    more.style.display = "none";
+    more.addEventListener("click", function () {
+      f.expanded = !f.expanded;
+      updateFacetUI();
+    });
+    f.el.appendChild(more);
+    f.moreBtn = more;
   });
 
   // ---- Busca textual -----------------------------------------------------
@@ -71,21 +103,68 @@
     state = { area: new Set(), segmento: new Set(), serie: new Set(), habilidade: new Set(), q: "" };
     document.getElementById("search").value = "";
     document.querySelectorAll(".chip").forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
+    Object.keys(facets).forEach(function (key) { facets[key].expanded = false; });
     render();
   });
 
-  // ---- Lógica de correspondência (E entre facetas, OU dentro da faceta) ---
-  function matches(r) {
-    if (state.area.size && !state.area.has(r.area)) return false;
-    if (state.segmento.size && !state.segmento.has(r.segmento)) return false;
-    if (state.serie.size && !r.series.some(function (s) { return state.serie.has(s); })) return false;
-    if (state.habilidade.size && !r.habilidades.some(function (h) { return state.habilidade.has(h); })) return false;
+  // ---- Correspondência (E entre facetas, OU dentro da faceta) ------------
+  // passes(r, exceptKey) ignora a faceta exceptKey — é a base tanto do filtro
+  // final (matches) quanto do cálculo de quais valores ainda são possíveis.
+  function passes(r, exceptKey) {
+    if (exceptKey !== "area" && state.area.size && !state.area.has(r.area)) return false;
+    if (exceptKey !== "segmento" && state.segmento.size && !state.segmento.has(r.segmento)) return false;
+    if (exceptKey !== "serie" && state.serie.size && !r.series.some(function (s) { return state.serie.has(s); })) return false;
+    if (exceptKey !== "habilidade" && state.habilidade.size && !r.habilidades.some(function (h) { return state.habilidade.has(h); })) return false;
     if (state.q) {
       var blob = [r.titulo, r.assunto, r.resumo, r.area, r.segmento]
         .concat(r.tags, r.series, r.habilidades).join(" ").toLowerCase();
       if (blob.indexOf(state.q) === -1) return false;
     }
     return true;
+  }
+
+  function matches(r) { return passes(r, null); }
+
+  // Valores de uma faceta que ainda levam a algum resultado, dadas as OUTRAS
+  // facetas já escolhidas. É isso que faz o filtro "cascatear".
+  function reachable(key) {
+    var s = new Set();
+    var getter = facets[key].getter;
+    RESOURCES.forEach(function (r) {
+      if (!passes(r, key)) return;
+      var v = getter(r);
+      (Array.isArray(v) ? v : [v]).forEach(function (x) { if (x) s.add(x); });
+    });
+    return s;
+  }
+
+  // ---- Atualiza a aparência das facetas (o que aparece e o "ver mais") ----
+  function updateFacetUI() {
+    Object.keys(facets).forEach(function (key) {
+      var f = facets[key];
+      var reach = reachable(key);
+      // Mostra o chip se ele ainda leva a resultado OU já está selecionado
+      // (nunca escondemos algo que o usuário acabou de marcar).
+      var visiveis = [];
+      f.chips.forEach(function (c) {
+        var mostrar = reach.has(c.value) || state[key].has(c.value);
+        c.el.style.display = mostrar ? "" : "none";
+        if (mostrar) visiveis.push(c);
+      });
+      // Entre os visíveis, colapsa os que passam de MAX_CHIPS (se não expandido).
+      visiveis.forEach(function (c, i) {
+        if (!f.expanded && i >= MAX_CHIPS) c.el.style.display = "none";
+      });
+      var total = visiveis.length;
+      if (total > MAX_CHIPS) {
+        f.moreBtn.style.display = "";
+        f.moreBtn.textContent = f.expanded ? "ver menos ▲" : "ver mais (" + (total - MAX_CHIPS) + ") ▼";
+      } else {
+        f.moreBtn.style.display = "none";
+      }
+      // Faceta sem nenhum valor possível desaparece inteira.
+      f.group.style.display = total === 0 ? "none" : "";
+    });
   }
 
   // ---- Avaliação por estrelas (média + votos) ----------------------------
@@ -183,6 +262,7 @@
       : '<p class="empty">Nenhum recurso encontrado com esses filtros. Tente limpar alguns.</p>';
     countEl.textContent = list.length + (list.length === 1 ? " recurso" : " recursos");
     wireRatings();
+    updateFacetUI();
   }
 
   function esc(s) {

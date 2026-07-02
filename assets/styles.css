@@ -104,6 +104,11 @@ a { color: inherit; }
 /* Chips do filtro de Habilidade: mesmo visual de código monoespaçado dos cards */
 .chip.chip-hab { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem; letter-spacing: .02em; }
 
+/* "ver mais / ver menos": revela os chips escondidos quando a lista é longa
+   (pensado para as habilidades da BNCC, que vão crescer bastante). */
+.chip.chip-more { background: transparent; border: 1px dashed var(--line); color: var(--ink-soft); font-weight: 600; }
+.chip.chip-more:hover { border-color: var(--ink-soft); color: var(--ink); }
+
 /* ---------- Grade de cards ---------- */
 .grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

@@ -14,7 +14,7 @@ criticidade para saber o que se quer e conseguir tirar a ideia do papel.
 | Álbum da Copa: quando fica difícil não repetir? | Matemática | Ensino Médio | Funções e probabilidade |
 | Do carvão às COPs: uma linha do tempo do clima e do mundo moderno | Ciências Humanas | Anos Finais (9º ano) | Mundo contemporâneo e mudança climática |
 | Boia ou afunda? Adivinhe e descubra | Ciências da Natureza | Educação Infantil | Flutuação: prever, observar e comparar |
-| Troca-troca de sinônimos | Linguagens | Anos Iniciais (3º ano) | Sinônimos, vocabulário e sentido |
+| Qual palavra combina? Um jogo de sinônimos | Linguagens | Anos Iniciais (3º ano) | Sinônimos, vocabulário e sentido |
 
 Cada recurso traz **habilidades trabalhadas (BNCC)** e **séries indicadas**.
 Já são quatro áreas do conhecimento e quatro segmentos — da Educação Infantil
@@ -50,7 +50,7 @@ recursos/
   matematica-figurinhas/ Recurso de Matemática (funções e probabilidade)
   ciencias-humanas-linha-do-tempo-clima/ Recurso de Ciências Humanas (clima e mundo moderno)
   ciencias-natureza-boia-ou-afunda/ Recurso de Ciências da Natureza (flutuação, Educação Infantil)
-  linguagens-troca-troca-sinonimos/ Recurso de Linguagens (sinônimos e sentido, 3º ano)
+  linguagens-sinonimos/   Recurso de Linguagens (sinônimos e sentido, 3º ano)
 ```
 
 ## Como adicionar um recurso (compartilhamento entre pares)
