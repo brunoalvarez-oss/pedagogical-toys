@@ -36,19 +36,25 @@
 
       <div class="controls">
         <div class="control">
-          <label for="N">Tamanho do álbum (N figurinhas)</label>
-          <div style="display:flex; align-items:center; gap:12px">
-            <input type="range" id="N" min="50" max="1000" step="10" value="640" style="flex:1">
-            <input type="number" id="N-num" min="1" max="1000" step="1" value="640" style="width:92px" aria-label="Tamanho do álbum (número exato)">
+          <label for="N-num">Tamanho do álbum (N figurinhas)</label>
+          <div class="input-pair">
+            <input type="range" id="N" min="50" max="1000" step="10" value="640">
+            <input type="number" id="N-num" min="1" max="1000" step="1" value="640" aria-label="Tamanho do álbum (número exato)">
           </div>
         </div>
         <div class="control" id="ctrl-c">
-          <label for="c">Figurinhas por pacote (c) <span class="val" id="c-val">5</span></label>
-          <input type="range" id="c" min="1" max="12" step="1" value="5">
+          <label for="c-num">Figurinhas por pacote (c)</label>
+          <div class="input-pair">
+            <input type="range" id="c" min="1" max="12" step="1" value="5">
+            <input type="number" id="c-num" min="1" max="1000" step="1" value="5" aria-label="Figurinhas por pacote (número exato)">
+          </div>
         </div>
         <div class="control">
-          <label for="k">Quantas você já tem (k) <span class="val" id="k-val">320</span></label>
-          <input type="range" id="k" min="0" max="640" step="1" value="320">
+          <label for="k-num">Quantas você já tem (k)</label>
+          <div class="input-pair">
+            <input type="range" id="k" min="0" max="640" step="1" value="320">
+            <input type="number" id="k-num" min="0" max="1000" step="1" value="320" aria-label="Quantas você já tem (número exato)">
+          </div>
         </div>
       </div>
 
@@ -154,9 +160,20 @@
     var $ = function (id) { return document.getElementById(id); };
     var mode = "simples";
 
-    var els = { N: $("N"), Nnum: $("N-num"), c: $("c"), k: $("k") };
-    var vals = { c: $("c-val"), k: $("k-val") };
     var currentK = 0; // posição destacada no gráfico (linha-guia vertical)
+
+    function clampInt(v, lo, hi) { v = Math.round(v); if (isNaN(v)) v = lo; return Math.max(lo, Math.min(hi, v)); }
+    // Os campos numéricos são a fonte de verdade de cada parâmetro.
+    function readN() { return clampInt(+$("N-num").value, 1, 1000); }
+    function readC() { return clampInt(+$("c-num").value, 1, readN()); }
+    function readK() { return clampInt(+$("k-num").value, 0, readN()); }
+
+    // Espelha o valor normalizado no slider e no campo — sem atrapalhar o campo em foco.
+    function syncPair(id, value, sliderMin, sliderMax) {
+      $(id).value = Math.max(sliderMin, Math.min(sliderMax, value));
+      var num = $(id + "-num");
+      if (document.activeElement !== num) num.value = value;
+    }
 
     // Combinação relativa C(k,c)/C(N,c) sem estourar: produto de (k-i)/(N-i).
     function packAllRepeated(k, N, c) {
@@ -227,14 +244,17 @@
     }
 
     function build() {
-      var N = readN(), c = +els.c.value;
-      // k acompanha o tamanho do álbum
-      els.k.max = N;
-      if (+els.k.value > N) els.k.value = N;
-      var k = +els.k.value;
+      var N = readN();
+      var c = Math.min(readC(), N);
+      var k = Math.min(readK(), N);
       currentK = k;
 
-      vals.c.textContent = c; vals.k.textContent = k;
+      // c e k acompanham o tamanho do álbum; normaliza todos os controles de uma vez
+      $("k").max = N; $("k-num").max = N; $("c-num").max = N;
+      syncPair("N", N, 50, 1000);
+      syncPair("c", c, 1, 12);
+      syncPair("k", k, 0, N);
+
       chart.options.scales.x.max = N;
 
       var ds = [{
@@ -314,20 +334,14 @@
     $("mode-simples").addEventListener("click", function () { setMode("simples"); });
     $("mode-avancado").addEventListener("click", function () { setMode("avancado"); });
 
-    // N pode ser ajustado pelo slider OU digitado no campo (1 a 1000). Mantemos os dois em sincronia.
-    function readN() {
-      var v = Math.round(+els.Nnum.value);
-      if (isNaN(v) || v < 1) v = 1;
-      if (v > 1000) v = 1000;
-      return v;
-    }
-    els.N.addEventListener("input", function () { els.Nnum.value = els.N.value; build(); });
-    els.Nnum.addEventListener("input", function () {
-      var v = readN();
-      els.N.value = Math.min(1000, Math.max(50, v)); // o slider começa em 50; o campo aceita menos
-      build();
+    // Cada parâmetro (N, c, k) tem slider + campo numérico. O campo é a fonte de
+    // verdade e aceita valores exatos; o slider apenas espelha. Como build() lê
+    // sempre dos campos, alternar de modo nunca perde os valores digitados.
+    ["N", "c", "k"].forEach(function (id) {
+      $(id).addEventListener("input", function () { $(id + "-num").value = $(id).value; build(); });
+      $(id + "-num").addEventListener("input", build);
+      $(id + "-num").addEventListener("change", build); // ao sair do campo, normaliza o que ficou fora da faixa
     });
-    ["c", "k"].forEach(function (id) { els[id].addEventListener("input", build); });
 
     setMode("simples");
   })();

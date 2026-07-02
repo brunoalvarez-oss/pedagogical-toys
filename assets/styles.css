@@ -116,6 +116,12 @@ a { color: inherit; }
   font-size: .78rem; padding: 3px 9px; border-radius: 7px;
   background: var(--bg); color: var(--ink-soft); border: 1px solid var(--line);
 }
+.card .habs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.hab {
+  font-size: .72rem; font-weight: 700; letter-spacing: .03em;
+  padding: 3px 8px; border-radius: 6px; border: 1px dashed var(--line);
+  color: var(--ink-soft); font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
 
 /* Cores por área */
 .area-matematica        { background: var(--matematica-soft);        color: #24589e; }
@@ -155,6 +161,9 @@ a { color: inherit; }
 .control label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: 8px; }
 .control label .val { float: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .control input[type="range"] { width: 100%; accent-color: var(--matematica); }
+.input-pair { display: flex; align-items: center; gap: 12px; }
+.input-pair input[type="range"] { flex: 1; }
+.input-pair input[type="number"] { width: 88px; flex: 0 0 auto; }
 .control select, .control input[type="number"] {
   width: 100%; padding: 9px 12px; font: inherit; border: 1px solid var(--line);
   border-radius: var(--radius-sm); background: var(--bg); color: var(--ink);
