@@ -33,12 +33,20 @@
     return arr.slice().sort(function (a, b) { return ordem.indexOf(a) - ordem.indexOf(b); });
   }
 
+  // Nome da área -> slug (para colorir os chips do filtro como nos cards)
+  var areaSlugByName = {};
+  RESOURCES.forEach(function (r) { areaSlugByName[r.area] = r.areaSlug; });
+
   // ---- Renderiza os chips de cada faceta ---------------------------------
   Object.keys(facets).forEach(function (key) {
     var f = facets[key];
     f.values.forEach(function (value) {
       var chip = document.createElement("button");
       chip.className = "chip";
+      // Mesma identidade visual dos cards: Área ganha a cor da área;
+      // Habilidade ganha o visual de código monoespaçado.
+      if (key === "area" && areaSlugByName[value]) chip.className += " chip-area area-" + areaSlugByName[value];
+      if (key === "habilidade") chip.className += " chip-hab";
       chip.type = "button";
       chip.textContent = value;
       chip.setAttribute("aria-pressed", "false");

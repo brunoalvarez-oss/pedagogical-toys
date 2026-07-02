@@ -89,6 +89,21 @@ a { color: inherit; }
 }
 .clear:hover { text-decoration: underline; }
 
+/* Chips do filtro de Área: mesma paleta dos cards (fundo suave + texto da
+   cor da área). Selecionado = cor cheia da área com texto branco. */
+.chip.area-matematica        { background: var(--matematica-soft);        color: #24589e; border-color: transparent; }
+.chip.area-linguagens        { background: var(--linguagens-soft);        color: #b23a5e; border-color: transparent; }
+.chip.area-ciencias-natureza { background: var(--ciencias-natureza-soft); color: #1f7a52; border-color: transparent; }
+.chip.area-ciencias-humanas  { background: var(--ciencias-humanas-soft);  color: #9c6a12; border-color: transparent; }
+.chip.chip-area:hover { filter: brightness(.97); }
+.chip.area-matematica[aria-pressed="true"]        { background: #24589e; color: #fff; border-color: #24589e; }
+.chip.area-linguagens[aria-pressed="true"]        { background: #b23a5e; color: #fff; border-color: #b23a5e; }
+.chip.area-ciencias-natureza[aria-pressed="true"] { background: #1f7a52; color: #fff; border-color: #1f7a52; }
+.chip.area-ciencias-humanas[aria-pressed="true"]  { background: #9c6a12; color: #fff; border-color: #9c6a12; }
+
+/* Chips do filtro de Habilidade: mesmo visual de código monoespaçado dos cards */
+.chip.chip-hab { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem; letter-spacing: .02em; }
+
 /* ---------- Grade de cards ---------- */
 .grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
