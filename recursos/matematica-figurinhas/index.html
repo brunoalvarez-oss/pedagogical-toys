@@ -36,8 +36,11 @@
 
       <div class="controls">
         <div class="control">
-          <label for="N">Tamanho do álbum (N figurinhas) <span class="val" id="N-val">640</span></label>
-          <input type="range" id="N" min="50" max="800" step="10" value="640">
+          <label for="N">Tamanho do álbum (N figurinhas)</label>
+          <div style="display:flex; align-items:center; gap:12px">
+            <input type="range" id="N" min="50" max="1000" step="10" value="640" style="flex:1">
+            <input type="number" id="N-num" min="1" max="1000" step="1" value="640" style="width:92px" aria-label="Tamanho do álbum (número exato)">
+          </div>
         </div>
         <div class="control" id="ctrl-c">
           <label for="c">Figurinhas por pacote (c) <span class="val" id="c-val">5</span></label>
@@ -79,6 +82,40 @@
       </div>
     </section>
 
+    <!-- ================= PERGUNTAS PARA A TURMA ================= -->
+    <section class="panel">
+      <h2>Perguntas para a turma</h2>
+      <p class="muted">Sugestões de perguntas para conduzir a exploração, do mais simples ao mais desafiador. Ao lado, o que a turma pode descobrir mexendo no simulador.</p>
+
+      <h3>Para começar (observação)</h3>
+      <ul>
+        <li><strong>Com o álbum vazio (k = 0), qual é a chance de vir uma repetida? E com o álbum cheio (k = N)?</strong><br>
+          <span class="muted">Movendo o k para as pontas, os alunos veem a chance ir de 0% a 100% e entendem os limites do fenômeno.</span></li>
+        <li><strong>O que acontece com a curva azul quando arrasto o k para a direita?</strong><br>
+          <span class="muted">A linha-guia e o ponto destacado sobem juntos: a chance de repetir cresce conforme o álbum enche.</span></li>
+      </ul>
+
+      <h3>Desenvolvendo (relações)</h3>
+      <ul>
+        <li><strong>Em que ponto do álbum a chance de repetir chega a 50%? Isso depende do tamanho N?</strong><br>
+          <span class="muted">Testando N = 640 e N = 980, percebem que 50% acontece sempre na metade (k = N/2): a reta não muda de inclinação relativa.</span></li>
+        <li><strong>A curva azul é uma reta. Por quê? Qual é a "regra" (a lei da função) por trás dela?</strong><br>
+          <span class="muted">Chegam a p = k/N e reconhecem uma função afim: cada figurinha nova aumenta a chance sempre na mesma proporção.</span></li>
+        <li><strong>(Modo avançado) Se tenho metade do álbum, quantas repetidas espero num pacote de 5?</strong><br>
+          <span class="muted">O big number "repetidas por pacote" mostra ~2,5. Relacionam o valor esperado com a multiplicação c · (k/N).</span></li>
+      </ul>
+
+      <h3>Para desafiar (análise e argumentação)</h3>
+      <ul>
+        <li><strong>Por que a curva laranja (pacote todo repetido) fica quase colada no zero por tanto tempo e só dispara no fim?</strong><br>
+          <span class="muted">Comparam as duas curvas e discutem por que repetir 1 é fácil, mas repetir as 5 ao mesmo tempo é raro até o álbum estar muito cheio.</span></li>
+        <li><strong>Aumentar o álbum de 640 para 980 figurinhas deixa tudo mais fácil ou mais difícil de completar? Use o simulador para defender sua resposta.</strong><br>
+          <span class="muted">Observam a estimativa do colecionador crescer bastante e argumentam com números — não com "achismo".</span></li>
+        <li><strong>Nosso modelo assume que toda figurinha é igualmente provável. Se existissem figurinhas raras, a chance real de repetir seria maior ou menor que a do gráfico?</strong><br>
+          <span class="muted">Debate de modelagem: percebem que o modelo é uma simplificação e propõem como ele poderia ser melhorado.</span></li>
+      </ul>
+    </section>
+
     <!-- ================= METADADOS ================= -->
     <section class="panel">
       <h2>Habilidades e séries</h2>
@@ -117,8 +154,9 @@
     var $ = function (id) { return document.getElementById(id); };
     var mode = "simples";
 
-    var els = { N: $("N"), c: $("c"), k: $("k") };
-    var vals = { N: $("N-val"), c: $("c-val"), k: $("k-val") };
+    var els = { N: $("N"), Nnum: $("N-num"), c: $("c"), k: $("k") };
+    var vals = { c: $("c-val"), k: $("k-val") };
+    var currentK = 0; // posição destacada no gráfico (linha-guia vertical)
 
     // Combinação relativa C(k,c)/C(N,c) sem estourar: produto de (k-i)/(N-i).
     function packAllRepeated(k, N, c) {
@@ -135,59 +173,103 @@
       return (N * H) / c;
     }
 
+    // Plugin: linha-guia vertical na posição de k selecionada, deixando claro
+    // que o gráfico responde exatamente às variáveis escolhidas.
+    var guideLine = {
+      id: "guideLine",
+      afterDatasetsDraw: function (chart) {
+        var x = chart.scales.x, y = chart.scales.y;
+        if (!x || !y) return;
+        var px = x.getPixelForValue(currentK);
+        if (px < x.left || px > x.right) return;
+        var ctx = chart.ctx;
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash([5, 5]);
+        ctx.moveTo(px, y.top); ctx.lineTo(px, y.bottom);
+        ctx.strokeStyle = "rgba(35,34,43,.28)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+    };
+
     var chart = new Chart($("chart"), {
       type: "line",
-      data: { labels: [], datasets: [] },
+      data: { datasets: [] },
       options: {
         responsive: true, maintainAspectRatio: false,
-        interaction: { mode: "index", intersect: false },
+        interaction: { mode: "nearest", intersect: false },
         scales: {
-          x: { title: { display: true, text: "Figurinhas que você já tem (k)" }, ticks: { maxTicksLimit: 9 } },
-          y: { title: { display: true, text: "Probabilidade" }, min: 0, max: 1,
+          x: { type: "linear", min: 0, max: 640,
+               title: { display: true, text: "Figurinhas que você já tem (k)" }, ticks: { maxTicksLimit: 9 } },
+          y: { title: { display: true, text: "Chance" }, min: 0, max: 1,
                ticks: { callback: function (v) { return Math.round(v * 100) + "%"; } } }
         },
         plugins: {
-          legend: { position: "top", labels: { font: { family: "Rethink Sans" }, usePointStyle: true } },
-          tooltip: { callbacks: { label: function (ctx) { return ctx.dataset.label + ": " + (ctx.parsed.y * 100).toFixed(1) + "%"; } } }
+          legend: { position: "top", labels: {
+            font: { family: "Rethink Sans" }, usePointStyle: true,
+            filter: function (item) { return item.text.indexOf("_") !== 0; } // esconde os destaques
+          } },
+          tooltip: { callbacks: { label: function (ctx) {
+            return ctx.dataset.label.replace(/^_/, "") + ": " + (ctx.parsed.y * 100).toFixed(1) + "%"; } } }
         }
-      }
+      },
+      plugins: [guideLine]
     });
 
+    // Gera pontos {x, y} de 0 até N para uma função qualquer.
+    function curve(N, fn) {
+      var STEP = Math.max(1, Math.round(N / 120)), pts = [];
+      for (var x = 0; x <= N; x += STEP) pts.push({ x: x, y: fn(x) });
+      if (pts[pts.length - 1].x !== N) pts.push({ x: N, y: fn(N) }); // garante o ponto final exato
+      return pts;
+    }
+
     function build() {
-      var N = +els.N.value, c = +els.c.value;
-      // k não pode passar de N
+      var N = readN(), c = +els.c.value;
+      // k acompanha o tamanho do álbum
       els.k.max = N;
       if (+els.k.value > N) els.k.value = N;
       var k = +els.k.value;
+      currentK = k;
 
-      vals.N.textContent = N; vals.c.textContent = c; vals.k.textContent = k;
-
-      var STEP = Math.max(1, Math.round(N / 80));
-      var labels = [], single = [], allRep = [];
-      for (var x = 0; x <= N; x += STEP) {
-        labels.push(x);
-        single.push(x / N);
-        allRep.push(packAllRepeated(x, N, c));
-      }
+      vals.c.textContent = c; vals.k.textContent = k;
+      chart.options.scales.x.max = N;
 
       var ds = [{
-        label: "P(1 figurinha repetida) = k/N",
-        data: single, borderColor: "#4C8BF5", backgroundColor: "#4C8BF5",
+        label: "Probabilidade de 1 figurinha repetida",
+        data: curve(N, function (x) { return x / N; }),
+        borderColor: "#4C8BF5", backgroundColor: "#4C8BF5",
         borderWidth: 3, pointRadius: 0, tension: 0
       }];
+      // Ponto de destaque exatamente em (k, k/N)
+      ds.push(highlight(k, k / N, "#4C8BF5"));
 
       if (mode === "avancado") {
         ds.push({
-          label: "P(pacote inteiro repetido)",
-          data: allRep, borderColor: "#E0A43B", backgroundColor: "#E0A43B",
+          label: "Probabilidade do pacote inteiro repetido",
+          data: curve(N, function (x) { return packAllRepeated(x, N, c); }),
+          borderColor: "#E0A43B", backgroundColor: "#E0A43B",
           borderWidth: 3, pointRadius: 0, tension: 0.15, borderDash: [6, 4]
         });
+        ds.push(highlight(k, packAllRepeated(k, N, c), "#E0A43B"));
       }
-      chart.data.labels = labels;
+
       chart.data.datasets = ds;
       chart.update();
 
       renderReadouts(N, c, k);
+    }
+
+    // Dataset de um único ponto destacado (aro branco com borda colorida).
+    function highlight(x, y, color) {
+      return {
+        label: "_destaque", type: "scatter", data: [{ x: x, y: y }],
+        pointRadius: 7, pointHoverRadius: 8, pointBorderWidth: 3,
+        pointBackgroundColor: "#fff", pointBorderColor: color,
+        borderColor: color, showLine: false
+      };
     }
 
     function pct(x) { return (x * 100).toFixed(1) + "%"; }
@@ -197,15 +279,15 @@
       var box = $("readouts");
       var html =
         readout("Você já tem", k + " / " + N) +
-        readout("P(1 repetida)", pct(pSingle));
+        readout("Probabilidade de encontrar 1 figurinha repetida", pct(pSingle));
 
       if (mode === "avancado") {
         var expected = c * pSingle;
         var pAll = packAllRepeated(k, N, c);
         html +=
           readout("Repetidas por pacote (média)", expected.toFixed(2) + " de " + c) +
-          readout("P(pacote todo repetido)", pct(pAll)) +
-          readout("P(pelo menos 1 nova)", pct(1 - pAll));
+          readout("Probabilidade de o pacote vir todo repetido", pct(pAll)) +
+          readout("Probabilidade de vir pelo menos 1 figurinha nova", pct(1 - pAll));
       }
       box.innerHTML = html;
 
@@ -232,7 +314,20 @@
     $("mode-simples").addEventListener("click", function () { setMode("simples"); });
     $("mode-avancado").addEventListener("click", function () { setMode("avancado"); });
 
-    ["N", "c", "k"].forEach(function (id) { els[id].addEventListener("input", build); });
+    // N pode ser ajustado pelo slider OU digitado no campo (1 a 1000). Mantemos os dois em sincronia.
+    function readN() {
+      var v = Math.round(+els.Nnum.value);
+      if (isNaN(v) || v < 1) v = 1;
+      if (v > 1000) v = 1000;
+      return v;
+    }
+    els.N.addEventListener("input", function () { els.Nnum.value = els.N.value; build(); });
+    els.Nnum.addEventListener("input", function () {
+      var v = readN();
+      els.N.value = Math.min(1000, Math.max(50, v)); // o slider começa em 50; o campo aceita menos
+      build();
+    });
+    ["c", "k"].forEach(function (id) { els[id].addEventListener("input", build); });
 
     setMode("simples");
   })();
