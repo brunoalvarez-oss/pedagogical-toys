@@ -45,6 +45,19 @@ window.PEDAGOGICAL_RESOURCES = [
     tags: ["flutuação", "boia ou afunda", "previsão", "método científico", "propriedades dos objetos", "água"],
     resumo: "Brincadeira científica para os pequenos: a criança arrisca um palpite (boia ou afunda?), solta o objeto na água e compara com o que aconteceu. Objetos escolhidos de propósito para quebrar a ideia de que 'grande afunda' — a maçã boia, a moeda afunda. O foco é prever, observar e mudar de ideia diante da evidência.",
     path: "recursos/ciencias-natureza-boia-ou-afunda/index.html"
+  },
+  {
+    id: "linguagens-troca-troca-sinonimos",
+    titulo: "Troca-troca de sinônimos",
+    area: "Linguagens",
+    areaSlug: "linguagens",
+    segmento: "Anos Iniciais",
+    series: ["3º ano", "4º ano"],
+    assunto: "Sinônimos, vocabulário e sentido",
+    habilidades: ["EF35LP06", "EF35LP08"],
+    tags: ["sinônimos", "vocabulário", "sentido das palavras", "coesão", "substituição lexical", "leitura em voz alta"],
+    resumo: "A criança troca uma palavra da frase por sinônimos e percebe o que muda: a força, o clima, às vezes o próprio sentido. Mostra que sinônimo 'perfeito' quase não existe e que escolher a palavra certa depende do contexto — uma decisão de quem escreve.",
+    path: "recursos/linguagens-troca-troca-sinonimos/index.html"
   }
   // Próximos recursos entram aqui (veja recursos/_template/ e o README).
 ];
