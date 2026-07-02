@@ -29,8 +29,8 @@ window.PEDAGOGICAL_RESOURCES = [
     series: ["9º ano"],
     assunto: "Mundo contemporâneo e mudança climática",
     habilidades: ["EF09HI33", "EF09HI34", "EF09GE07"],
-    tags: ["revolução industrial", "mudança climática", "correlação e causa", "leitura de gráficos"],
-    resumo: "Linha do tempo interativa de 1750 a hoje: o aluno cruza os marcos do mundo moderno com camadas opcionais de CO₂ e temperatura — sem conta pesada, focando no raciocínio histórico e na diferença entre andar junto e causar.",
+    tags: ["revolução industrial", "mudança climática", "gases de efeito estufa", "correlação e causa", "leitura de gráficos"],
+    resumo: "Linha do tempo interativa de 1750 a hoje: o aluno cruza os marcos do mundo moderno com camadas opcionais dos gases de efeito estufa (CO₂, metano, óxido nitroso) e da temperatura — sem conta pesada, focando no raciocínio histórico e na diferença entre andar junto e causar.",
     path: "recursos/ciencias-humanas-linha-do-tempo-clima/index.html"
   }
   // Próximos recursos entram aqui (veja recursos/_template/ e o README).
