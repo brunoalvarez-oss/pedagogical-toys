@@ -12,11 +12,11 @@ criticidade para saber o que se quer e conseguir tirar a ideia do papel.
 | Recurso | Área | Segmento | Assunto |
 |---|---|---|---|
 | Álbum da Copa: quando fica difícil não repetir? | Matemática | Ensino Médio | Funções e probabilidade |
+| Do carvão às COPs: uma linha do tempo do clima e do mundo moderno | Ciências Humanas | Anos Finais (9º ano) | Mundo contemporâneo e mudança climática |
 
 Cada recurso traz **habilidades trabalhadas (BNCC)** e **séries indicadas**.
-A biblioteca começa com um recurso e cresce por contribuição dos colegas — a
-próxima leva prevê um recurso para cada área (Linguagens, Ciências da Natureza
-e Ciências Humanas).
+A biblioteca cresce por contribuição dos colegas — a próxima leva prevê também
+recursos de Linguagens e Ciências da Natureza.
 
 ## Como rodar
 
@@ -45,6 +45,7 @@ assets/
 recursos/
   _template/             Modelo comentado para criar um recurso novo
   matematica-figurinhas/ Recurso de Matemática (funções e probabilidade)
+  ciencias-humanas-linha-do-tempo-clima/ Recurso de Ciências Humanas (clima e mundo moderno)
 ```
 
 ## Como adicionar um recurso (compartilhamento entre pares)

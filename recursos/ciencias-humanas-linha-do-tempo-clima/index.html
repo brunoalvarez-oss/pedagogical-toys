@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Do carvão às COPs: uma linha do tempo do clima e do mundo moderno · Ciências Humanas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <script src="../../assets/vendor/chart.umd.min.js"></script>
+</head>
+<body class="theme-ciencias-humanas">
+  <div class="wrap resource">
+    <a class="backlink" href="../../index.html">← Voltar à biblioteca</a>
+
+    <header class="resource-head">
+      <div class="top">
+        <span class="badge area-ciencias-humanas">Ciências Humanas</span>
+        <span class="badge seg">Anos Finais · 9º ano</span>
+      </div>
+      <h1>Do carvão às COPs: uma linha do tempo do clima e do mundo moderno</h1>
+      <p class="lead">Arraste o tempo de <strong>1750 aos dias de hoje</strong> e acompanhe, lado a lado, os grandes acontecimentos do mundo moderno e o que estava acontecendo com o planeta. Comece só com os fatos históricos e vá <strong>ligando camadas</strong> — o gás carbônico no ar, a temperatura da Terra — para investigar como a história humana e a história do clima se cruzam.</p>
+    </header>
+
+    <!-- ================= LINHA DO TEMPO ================= -->
+    <section class="panel">
+      <h2>Linha do tempo</h2>
+
+      <div class="year-display">
+        <span class="yr" id="year-label">1900</span>
+        <span class="cap">ano selecionado — arraste para viajar no tempo</span>
+      </div>
+      <input type="range" id="year" min="1750" max="2025" step="1" value="1900" aria-label="Ano selecionado" style="width:100%; accent-color: var(--ciencias-humanas)">
+
+      <p class="muted" style="margin:16px 0 6px"><strong>Camadas opcionais.</strong> Ligue uma de cada vez e observe o que aparece no gráfico. Você não precisa das duas para começar.</p>
+      <div class="layers">
+        <label class="layer">
+          <input type="checkbox" id="layer-co2" checked>
+          <span class="swatch" style="background:#0EA5A5"></span>
+          Gás carbônico no ar (CO₂)
+        </label>
+        <label class="layer">
+          <input type="checkbox" id="layer-temp">
+          <span class="swatch" style="background:#DC2626"></span>
+          Temperatura média do planeta
+        </label>
+      </div>
+
+      <p class="muted" style="margin:14px 0 6px"><strong>Tipos de acontecimento.</strong> Filtre o que aparece na linha do tempo.</p>
+      <div class="event-strip" id="type-filter" role="group" aria-label="Filtrar tipos de acontecimento">
+        <button class="event-btn" data-tipo="energia" aria-pressed="true"><span class="dot" style="background:#2563EB"></span>Energia</button>
+        <button class="event-btn" data-tipo="sociedade" aria-pressed="true"><span class="dot" style="background:#D97706"></span>Sociedade</button>
+        <button class="event-btn" data-tipo="clima" aria-pressed="true"><span class="dot" style="background:#16A34A"></span>Clima e ciência</button>
+      </div>
+
+      <div class="chart-box"><canvas id="chart"></canvas></div>
+
+      <div class="readouts" id="readouts"></div>
+
+      <!-- Acontecimento mais próximo do ano escolhido -->
+      <div class="event-card" id="event-card"></div>
+
+      <p class="muted" style="margin:22px 0 6px"><strong>Ir direto a um marco.</strong> Toque em um acontecimento para saltar até o ano dele.</p>
+      <div class="event-strip" id="event-jump"></div>
+    </section>
+
+    <!-- ================= COMO LER ESTA LINHA DO TEMPO ================= -->
+    <section class="panel">
+      <h2>Como ler esta linha do tempo</h2>
+      <p>A linha do tempo tem duas leituras que se completam:</p>
+      <ul>
+        <li><strong>Os acontecimentos</strong> (as bolinhas coloridas na base do gráfico) marcam invenções, guerras, conferências e descobertas científicas. Eles são a "história humana".</li>
+        <li><strong>As camadas</strong> (as curvas que você liga) mostram dois números do planeta ao longo do tempo:
+          <ul>
+            <li>a <strong style="color:#0EA5A5">concentração de CO₂</strong> — quanto gás carbônico existe em cada milhão de partículas de ar (a unidade é <em>ppm</em>, "partes por milhão");</li>
+            <li>a <strong style="color:#DC2626">temperatura média</strong> — quanto o planeta está mais quente (ou mais frio) em relação à época anterior à industrialização, medida em graus Celsius.</li>
+          </ul>
+        </li>
+      </ul>
+      <p class="muted">A ideia é começar simples: veja só os acontecimentos, depois ligue o CO₂, depois a temperatura. A cada camada, uma pergunta nova aparece — e é aí que a aula acontece.</p>
+
+      <div class="note">
+        <strong>Uma linha sobe junto da outra. Isso prova que uma causou a outra?</strong> Essa é a pergunta mais importante do recurso — e a resposta honesta é: <em>não, sozinha não prova</em>. Duas coisas crescerem ao mesmo tempo é uma <strong>pista</strong>, não uma prova. O que transforma a pista em explicação é a ciência por trás: já em <strong>1896</strong> o cientista Svante Arrhenius calculou que mais CO₂ no ar segura mais calor. Use este recurso para separar duas ideias que os alunos costumam confundir: <em>acontecer junto</em> (correlação) e <em>fazer acontecer</em> (causa).
+      </div>
+    </section>
+
+    <!-- ================= PERGUNTAS PARA A TURMA ================= -->
+    <section class="panel">
+      <h2>Perguntas para a turma</h2>
+      <p class="muted">Sugestões de perguntas para conduzir a exploração, do mais simples ao mais desafiador. Ao lado, o que a turma pode descobrir mexendo na linha do tempo.</p>
+
+      <h3>Para começar (observação)</h3>
+      <ul>
+        <li><strong>Só com os acontecimentos ligados, em que período eles ficam mais amontoados? O que isso sugere sobre o ritmo das mudanças no mundo?</strong><br>
+          <span class="muted">Deslizando o tempo, percebem que quase tudo se concentra depois de 1850 — a história moderna acelera.</span></li>
+        <li><strong>Ligue a camada do CO₂. Antes de mais ou menos 1850, o que a curva faz? E depois?</strong><br>
+          <span class="muted">Veem uma linha quase reta e baixa por séculos que, de repente, dispara — a "curva em taco de hóquei".</span></li>
+      </ul>
+
+      <h3>Desenvolvendo (relações)</h3>
+      <ul>
+        <li><strong>A disparada do CO₂ começa perto de qual tipo de acontecimento: energia, sociedade ou clima?</strong><br>
+          <span class="muted">Cruzam a curva com as bolinhas azuis (máquina a vapor, ferrovias, petróleo) e ligam o CO₂ à queima de combustíveis.</span></li>
+        <li><strong>Agora ligue também a temperatura. As duas curvas sobem no mesmo trecho da história?</strong><br>
+          <span class="muted">Comparam CO₂ e temperatura e notam que ambas disparam no século XX, ainda que a temperatura suba de forma mais irregular.</span></li>
+        <li><strong>Muitas conferências (Estocolmo, ECO-92, Kyoto, Paris) aparecem só depois de 1970. Por quê tão tarde?</strong><br>
+          <span class="muted">Relacionam a resposta política ao momento em que os dados do clima já eram alarmantes — a sociedade reage depois da ciência.</span></li>
+      </ul>
+
+      <h3>Para desafiar (análise e argumentação)</h3>
+      <ul>
+        <li><strong>As duas linhas sobem juntas. Isso é prova de que o CO₂ esquenta o planeta, ou pode ser coincidência? Como decidir?</strong><br>
+          <span class="muted">Debatem correlação × causa e reconhecem que a decisão vem da ciência (Arrhenius, 1896; IPCC, 1988), não só do formato dos gráficos.</span></li>
+        <li><strong>A ECO-92 foi no Brasil. Que responsabilidades e interesses diferentes têm países que se industrializaram cedo e países que industrializaram depois?</strong><br>
+          <span class="muted">Conectam a linha do tempo a questões de geografia e cidadania: quem emitiu mais historicamente e quem paga a conta hoje.</span></li>
+        <li><strong>Esta linha do tempo escolheu 15 acontecimentos. Que outro fato você acha que faltou — e por quê ele mudaria a história contada aqui?</strong><br>
+          <span class="muted">Percebem que toda linha do tempo é uma <em>seleção</em> feita por alguém: propor o que incluir é exercer autoria sobre a narrativa.</span></li>
+      </ul>
+    </section>
+
+    <!-- ================= METADADOS ================= -->
+    <section class="panel">
+      <h2>Habilidades e séries</h2>
+      <div class="meta-grid">
+        <div>
+          <h3 style="margin-top:0">Habilidades trabalhadas (BNCC)</h3>
+          <div class="skill"><code>EF09HI33</code><span class="desc">Analisar as transformações da sociedade contemporânea a partir da Revolução Industrial e do uso intensivo de fontes de energia.</span></div>
+          <div class="skill"><code>EF09HI34</code><span class="desc">Discutir as motivações e os efeitos de acordos e conferências internacionais sobre meio ambiente e desenvolvimento.</span></div>
+          <div class="skill"><code>EF09GE07</code><span class="desc">Analisar os impactos ambientais globais do modelo de produção e consumo, relacionando-os às mudanças climáticas.</span></div>
+          <p class="muted" style="margin-top:14px">Confira os códigos no currículo da sua rede — a redação e a numeração podem variar. Este recurso conversa naturalmente com <strong>História</strong>, <strong>Geografia</strong> e as <strong>Ciências da Natureza</strong>.</p>
+        </div>
+        <div>
+          <h3 style="margin-top:0">Série indicada</h3>
+          <div class="pill-list">
+            <span class="pill">9º ano</span>
+          </div>
+          <h3>Assunto</h3>
+          <div class="pill-list">
+            <span class="pill">Revolução Industrial</span>
+            <span class="pill">Mundo contemporâneo</span>
+            <span class="pill">Mudança climática</span>
+            <span class="pill">Correlação × causa</span>
+          </div>
+          <h3>Sem "conta pesada"</h3>
+          <p class="muted">Aqui não se calcula nada: lê-se um gráfico. A matemática fica no plano de fundo (subir, disparar, andar junto) para que o foco seja o raciocínio histórico e a leitura crítica de dados — acessível a toda a turma.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= O QUE O MODELO IGNORA ================= -->
+    <section class="panel">
+      <h2>De onde vêm os dados (e o que este recurso simplifica)</h2>
+      <p>Nenhuma linha do tempo mostra "a realidade inteira". Vale contar à turma o que ficou de fora — é assim que se forma um olhar crítico sobre dados:</p>
+      <ul>
+        <li><strong>O CO₂ não é o único vilão.</strong> Metano, óxido nitroso e outros gases também aquecem o planeta. Escolhemos o CO₂ por ser o mais conhecido e o mais ligado à queima de combustíveis.</li>
+        <li><strong>A curva de CO₂ junta duas fontes.</strong> Os valores antigos vêm de bolhas de ar presas no gelo polar (testemunhos de gelo); os recentes, de medições diretas no ar (desde 1958, no Havaí). São métodos diferentes costurados numa curva só.</li>
+        <li><strong>A temperatura é uma média do mundo todo.</strong> Um número esconde enormes diferenças: alguns lugares esquentam muito mais, outros quase nada. E ela sobe "aos trancos", com anos mais quentes e mais frios pelo caminho.</li>
+        <li><strong>Os valores são aproximados e arredondados</strong> para facilitar a leitura em sala. Para números oficiais, consulte fontes como o <strong>IPCC</strong>, a <strong>NASA/NOAA</strong> e o Observatório de Mauna Loa.</li>
+        <li><strong>Os 15 acontecimentos são uma escolha nossa.</strong> Outra pessoa montaria outra lista — e contaria outra história. Isso é um convite para a turma propor a própria versão.</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer class="site-footer"><div class="wrap">Biblioteca de Recursos Pedagógicos · recurso de Ciências Humanas</div></footer>
+
+  <script>
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+
+    // ---------------------------------------------------------------------
+    // DADOS CURADOS (aproximados e arredondados para leitura em sala).
+    // CO2 em ppm: testemunhos de gelo (até ~1958) + Mauna Loa (a partir de 1958).
+    // Temperatura: anomalia em °C sobre a média pré-industrial (1850-1900).
+    // Acontecimentos: seleção editorial de 15 marcos entre 1750 e 2025.
+    // ---------------------------------------------------------------------
+    var CO2 = [
+      { x: 1750, y: 278 }, { x: 1800, y: 283 }, { x: 1850, y: 285 },
+      { x: 1875, y: 289 }, { x: 1900, y: 296 }, { x: 1925, y: 305 },
+      { x: 1950, y: 311 }, { x: 1960, y: 317 }, { x: 1970, y: 325 },
+      { x: 1980, y: 339 }, { x: 1990, y: 354 }, { x: 2000, y: 369 },
+      { x: 2010, y: 389 }, { x: 2020, y: 414 }, { x: 2025, y: 424 }
+    ];
+    var TEMP = [
+      { x: 1850, y: -0.08 }, { x: 1880, y: -0.16 }, { x: 1900, y: -0.15 },
+      { x: 1920, y: -0.20 }, { x: 1940, y: 0.10 }, { x: 1950, y: 0.00 },
+      { x: 1960, y: 0.03 }, { x: 1970, y: 0.02 }, { x: 1980, y: 0.26 },
+      { x: 1990, y: 0.42 }, { x: 2000, y: 0.60 }, { x: 2010, y: 0.85 },
+      { x: 2016, y: 1.20 }, { x: 2020, y: 1.25 }, { x: 2025, y: 1.45 }
+    ];
+
+    var TIPOS = {
+      energia:   { cor: "#2563EB", rotulo: "Energia",         classe: "tipo-energia" },
+      sociedade: { cor: "#D97706", rotulo: "Sociedade",       classe: "tipo-sociedade" },
+      clima:     { cor: "#16A34A", rotulo: "Clima e ciência", classe: "tipo-clima" }
+    };
+
+    var EVENTOS = [
+      { ano: 1769, tipo: "energia",   titulo: "Máquina a vapor de James Watt",
+        texto: "A versão aperfeiçoada da máquina a vapor torna a queima de carvão a força motriz das fábricas. É o pontapé da Revolução Industrial.",
+        fonte: "Marco da Revolução Industrial" },
+      { ano: 1830, tipo: "energia",   titulo: "A era das ferrovias",
+        texto: "Trens a vapor espalham o carvão por toda a economia: transporte, indústria e cidades passam a depender de combustível fóssil.",
+        fonte: "Expansão ferroviária no Reino Unido" },
+      { ano: 1859, tipo: "energia",   titulo: "Primeiro poço de petróleo",
+        texto: "Edwin Drake perfura o primeiro poço comercial, nos EUA. Começa a era do petróleo, que se somaria ao carvão.",
+        fonte: "Titusville, Pensilvânia (EUA)" },
+      { ano: 1885, tipo: "energia",   titulo: "O automóvel a gasolina",
+        texto: "Karl Benz constrói o primeiro carro movido a gasolina. Décadas depois, os transportes se tornariam uma das maiores fontes de emissões.",
+        fonte: "Patente de Karl Benz, Alemanha" },
+      { ano: 1896, tipo: "clima",     titulo: "Arrhenius prevê o aquecimento",
+        texto: "O cientista Svante Arrhenius calcula, no papel, que mais CO₂ no ar deixaria o planeta mais quente. A ideia estava certa — só faltavam os dados.",
+        fonte: "Svante Arrhenius, Suécia" },
+      { ano: 1914, tipo: "sociedade", titulo: "Primeira Guerra Mundial",
+        texto: "A indústria bélica acelera a produção e o consumo de energia em escala nunca vista.",
+        fonte: "1914–1918" },
+      { ano: 1939, tipo: "sociedade", titulo: "Segunda Guerra Mundial",
+        texto: "Nova escalada industrial e tecnológica. No pós-guerra, a economia mundial cresce em ritmo explosivo.",
+        fonte: "1939–1945" },
+      { ano: 1950, tipo: "sociedade", titulo: "A Grande Aceleração",
+        texto: "População, consumo, energia e emissões disparam juntos a partir de meados do século XX. É quando quase todas as curvas sobem de vez.",
+        fonte: "Termo usado por cientistas do Sistema Terra" },
+      { ano: 1958, tipo: "clima",     titulo: "Keeling começa a medir o CO₂",
+        texto: "Charles Keeling instala medidores no vulcão Mauna Loa (Havaí). Pela primeira vez, o mundo passa a acompanhar o CO₂ em tempo real.",
+        fonte: "Observatório de Mauna Loa" },
+      { ano: 1972, tipo: "sociedade", titulo: "Conferência de Estocolmo",
+        texto: "A primeira grande conferência da ONU sobre o meio ambiente coloca o tema na agenda dos governos.",
+        fonte: "ONU, Estocolmo" },
+      { ano: 1988, tipo: "clima",     titulo: "Criação do IPCC",
+        texto: "A ONU cria o Painel Intergovernamental sobre Mudança do Clima para reunir e revisar a ciência do aquecimento global.",
+        fonte: "IPCC / ONU" },
+      { ano: 1992, tipo: "sociedade", titulo: "ECO-92, no Rio de Janeiro",
+        texto: "A Cúpula da Terra reúne o mundo no Brasil e cria a convenção do clima que daria origem às futuras COPs.",
+        fonte: "ONU, Rio de Janeiro" },
+      { ano: 1997, tipo: "sociedade", titulo: "Protocolo de Kyoto",
+        texto: "Primeiro acordo com metas de redução de emissões para os países mais ricos.",
+        fonte: "COP3, Kyoto (Japão)" },
+      { ano: 2015, tipo: "sociedade", titulo: "Acordo de Paris",
+        texto: "Quase todos os países se comprometem a limitar o aquecimento bem abaixo de 2 °C, buscando 1,5 °C.",
+        fonte: "COP21, Paris" },
+      { ano: 2019, tipo: "sociedade", titulo: "Greves pelo clima",
+        texto: "Milhões de jovens vão às ruas em greves globais cobrando ação climática dos governos.",
+        fonte: "Movimento Fridays for Future" }
+    ];
+
+    var YEAR_MIN = 1750, YEAR_MAX = 2025;
+
+    // Estado da interface
+    var year = 1900;
+    var tiposAtivos = { energia: true, sociedade: true, clima: true };
+
+    // Interpola linearmente um valor y para um dado ano numa série {x,y}.
+    // Retorna null se o ano estiver fora do alcance dos dados daquela série.
+    function interp(serie, ano) {
+      if (ano < serie[0].x || ano > serie[serie.length - 1].x) return null;
+      for (var i = 0; i < serie.length - 1; i++) {
+        var a = serie[i], b = serie[i + 1];
+        if (ano >= a.x && ano <= b.x) {
+          var t = (ano - a.x) / (b.x - a.x);
+          return a.y + t * (b.y - a.y);
+        }
+      }
+      return serie[serie.length - 1].y;
+    }
+
+    function eventosVisiveis() {
+      return EVENTOS.filter(function (e) { return tiposAtivos[e.tipo]; });
+    }
+
+    // O acontecimento "atual": o mais recente (dentre os visíveis) com ano <= ano escolhido.
+    function eventoAtual() {
+      var vis = eventosVisiveis(), achou = null;
+      for (var i = 0; i < vis.length; i++) {
+        if (vis[i].ano <= year) achou = vis[i];
+      }
+      return achou;
+    }
+
+    // ---------------------------------------------------------------------
+    // Plugin: linha-guia vertical no ano escolhido + bolinhas dos eventos
+    // na base do gráfico (só dos tipos ativos), destacando o evento atual.
+    // ---------------------------------------------------------------------
+    var timelineDeco = {
+      id: "timelineDeco",
+      afterDatasetsDraw: function (chart) {
+        var x = chart.scales.x, area = chart.chartArea, ctx = chart.ctx;
+        if (!x || !area) return;
+
+        // Linha-guia vertical no ano selecionado
+        var gx = x.getPixelForValue(year);
+        if (gx >= area.left && gx <= area.right) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.setLineDash([5, 5]);
+          ctx.moveTo(gx, area.top); ctx.lineTo(gx, area.bottom);
+          ctx.strokeStyle = "rgba(35,34,43,.30)";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Bolinhas dos eventos, na base do gráfico
+        var atual = eventoAtual();
+        var by = area.bottom - 7;
+        eventosVisiveis().forEach(function (e) {
+          var px = x.getPixelForValue(e.ano);
+          if (px < area.left || px > area.right) return;
+          var ativo = atual && e.ano === atual.ano;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(px, by, ativo ? 7 : 4.5, 0, Math.PI * 2);
+          ctx.fillStyle = TIPOS[e.tipo].cor;
+          ctx.globalAlpha = ativo ? 1 : 0.85;
+          ctx.fill();
+          if (ativo) {
+            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = "#fff";
+            ctx.stroke();
+          }
+          ctx.restore();
+        });
+      }
+    };
+
+    var chart = new Chart($("chart"), {
+      type: "line",
+      data: {
+        datasets: [
+          {
+            label: "CO₂ no ar (ppm)",
+            data: CO2, yAxisID: "y",
+            borderColor: "#0EA5A5", backgroundColor: "rgba(14,165,165,.10)",
+            borderWidth: 3, pointRadius: 0, tension: 0.25, fill: true, hidden: false
+          },
+          {
+            label: "Temperatura média (°C acima do pré-industrial)",
+            data: TEMP, yAxisID: "y1",
+            borderColor: "#DC2626", backgroundColor: "rgba(220,38,38,.08)",
+            borderWidth: 3, pointRadius: 0, tension: 0.25, fill: false, hidden: true
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        scales: {
+          x: {
+            type: "linear", min: YEAR_MIN, max: YEAR_MAX,
+            title: { display: true, text: "Ano" },
+            ticks: { maxTicksLimit: 8, callback: function (v) { return v; } }
+          },
+          y: {
+            position: "left", display: true,
+            title: { display: true, text: "CO₂ (ppm)", color: "#0B7C7C" },
+            ticks: { color: "#0B7C7C" },
+            grid: { color: "rgba(35,34,43,.06)" }
+          },
+          y1: {
+            position: "right", display: false,
+            title: { display: true, text: "Temperatura (°C)", color: "#DC2626" },
+            ticks: { color: "#DC2626", callback: function (v) { return (v > 0 ? "+" : "") + v; } },
+            grid: { drawOnChartArea: false }
+          }
+        },
+        plugins: {
+          legend: {
+            position: "top",
+            labels: { font: { family: "Rethink Sans" }, usePointStyle: true }
+          },
+          tooltip: {
+            callbacks: {
+              title: function (items) { return "Ano " + Math.round(items[0].parsed.x); },
+              label: function (ctx) {
+                if (ctx.dataset.yAxisID === "y1") return "Temperatura: " + (ctx.parsed.y > 0 ? "+" : "") + ctx.parsed.y.toFixed(2) + " °C";
+                return "CO₂: " + Math.round(ctx.parsed.y) + " ppm";
+              }
+            }
+          }
+        }
+      },
+      plugins: [timelineDeco]
+    });
+
+    function co2On()  { return $("layer-co2").checked; }
+    function tempOn() { return $("layer-temp").checked; }
+
+    function readout(k, v) {
+      return '<div class="readout"><div class="k">' + k + '</div><div class="v">' + v + "</div></div>";
+    }
+
+    function renderReadouts() {
+      var html = readout("Ano", String(year));
+
+      if (co2On()) {
+        var c = interp(CO2, year);
+        html += readout("CO₂ no ar", c == null ? "—" : Math.round(c) + " ppm");
+      }
+      if (tempOn()) {
+        var t = interp(TEMP, year);
+        html += readout("Temperatura média",
+          t == null ? "sem dado antes de 1850" : (t > 0 ? "+" : "") + t.toFixed(2) + " °C");
+      }
+      $("readouts").innerHTML = html;
+    }
+
+    function renderEventCard() {
+      var e = eventoAtual(), box = $("event-card");
+      if (!e) {
+        box.innerHTML = '<p class="muted" style="margin:0">Nenhum acontecimento (dos tipos escolhidos) até ' + year +
+          '. Arraste o tempo para a frente ou ligue mais tipos acima.</p>';
+        return;
+      }
+      var t = TIPOS[e.tipo];
+      box.innerHTML =
+        '<div class="head">' +
+          '<span class="yr">' + e.ano + '</span>' +
+          '<span class="tipo-tag ' + t.classe + '">' + t.rotulo + '</span>' +
+        '</div>' +
+        '<h3>' + e.titulo + '</h3>' +
+        '<p>' + e.texto + '</p>' +
+        '<p class="src">' + e.fonte + '</p>';
+    }
+
+    // Botões de salto: um por evento visível, em ordem cronológica.
+    function renderJump() {
+      var vis = eventosVisiveis();
+      $("event-jump").innerHTML = vis.map(function (e) {
+        return '<button class="event-btn" data-ano="' + e.ano + '">' +
+          '<span class="dot" style="background:' + TIPOS[e.tipo].cor + '"></span>' +
+          e.ano + " · " + e.titulo + "</button>";
+      }).join("");
+      Array.prototype.forEach.call($("event-jump").querySelectorAll("button"), function (btn) {
+        btn.addEventListener("click", function () {
+          setYear(+btn.getAttribute("data-ano"));
+        });
+      });
+    }
+
+    function refreshChartLayers() {
+      chart.data.datasets[0].hidden = !co2On();
+      chart.data.datasets[1].hidden = !tempOn();
+      chart.options.scales.y.display = co2On();
+      chart.options.scales.y1.display = tempOn();
+      chart.update();
+    }
+
+    function render() {
+      $("year-label").textContent = year;
+      if (document.activeElement !== $("year")) $("year").value = year;
+      renderReadouts();
+      renderEventCard();
+      chart.update();
+    }
+
+    function setYear(y) {
+      year = Math.max(YEAR_MIN, Math.min(YEAR_MAX, Math.round(y)));
+      render();
+    }
+
+    // Eventos de interface
+    $("year").addEventListener("input", function () { setYear(+$("year").value); });
+
+    ["layer-co2", "layer-temp"].forEach(function (id) {
+      $(id).addEventListener("change", function () { refreshChartLayers(); renderReadouts(); });
+    });
+
+    Array.prototype.forEach.call($("type-filter").querySelectorAll("button"), function (btn) {
+      btn.addEventListener("click", function () {
+        var tipo = btn.getAttribute("data-tipo");
+        tiposAtivos[tipo] = !tiposAtivos[tipo];
+        btn.setAttribute("aria-pressed", String(tiposAtivos[tipo]));
+        renderJump();
+        renderEventCard();
+        chart.update();
+      });
+    });
+
+    // Estado inicial
+    refreshChartLayers();
+    renderJump();
+    render();
+  })();
+  </script>
+</body>
+</html>
